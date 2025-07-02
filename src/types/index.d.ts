@@ -5,6 +5,7 @@ export interface SlidesPerView {
 }
 
 export type PaginationType = 'buttons' | 'dots' | 'lines' | 'fraction' | false
+
 export type PaginationPosition =
    | 'center'
    | 'bottom-center'
@@ -15,21 +16,20 @@ export type PaginationPosition =
 
 export interface CarouselProps {
    data: any[]
-   pagination?: PaginationType | PaginationType[]
-   paginationSize?: 'sm' | 'md' | 'lg'
-   paginationPosition?: PaginationPosition | PaginationPosition[]
-   paginationBackground?: boolean
-   direction?: 'horizontal' | 'vertical'
-   autoPlay?: boolean
-   autoPlayInterval?: number
-   itemsToShow?: number | SlidesPerView
-   mousewheel?: boolean
    gap?: number
-
    loop?: boolean
    speed?: number
    easing?: string
+   autoPlay?: boolean
+   mousewheel?: boolean
    currentItem?: number
+   autoPlayInterval?: number
+   paginationBackground?: boolean
+   paginationSize?: 'sm' | 'md' | 'lg'
+   itemsToShow?: number | SlidesPerView
+   direction?: 'horizontal' | 'vertical'
+   pagination?: PaginationType | PaginationType[]
+   paginationPosition?: PaginationPosition | PaginationPosition[]
 }
 
 export interface CarouselState {
@@ -41,11 +41,11 @@ export interface CarouselState {
 }
 
 export interface CarouselMethods {
-   goToSlide: (index: number, smooth?: boolean) => void
    goNext: (smooth?: boolean) => void
    goPrev: (smooth?: boolean) => void
    goNextPage: (smooth?: boolean) => void
    goPrevPage: (smooth?: boolean) => void
+   goToSlide: (index: number, smooth?: boolean) => void
 }
 
 export interface CarouselExposedMethods extends CarouselMethods {
@@ -55,28 +55,28 @@ export interface CarouselExposedMethods extends CarouselMethods {
 }
 
 export interface DragState {
-   isDragging: boolean
    startX: number
    startY: number
-   currentX: number
-   currentY: number
    deltaX: number
    deltaY: number
+   isDragging: boolean
+   currentX: number
+   currentY: number
    startTime: number
 }
 
 export interface WheelOptions {
+   threshold?: number
    preventDefault?: boolean
    stopPropagation?: boolean
-   threshold?: number
    velocityThreshold?: number
 }
 
 export interface AutoplayOptions {
    interval?: number
+   stopOnEnd?: boolean
    pauseOnHover?: boolean
    pauseOnInteraction?: boolean
-   stopOnEnd?: boolean
 }
 
 // Event interfaces
