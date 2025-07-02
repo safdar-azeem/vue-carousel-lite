@@ -1,24 +1,24 @@
 <script setup lang="ts">
 import type { CarouselProps } from '../types/index'
+import Pagination from './Pagination/Pagination.vue'
 import { useCarousel } from '../composables/useCarousel'
 import { useDimensions } from '../composables/useDimensions'
-import Pagination from './Pagination/Pagination.vue'
 import { computed, onBeforeMount, onMounted, readonly, ref, watch } from 'vue'
 
 const props = withDefaults(defineProps<CarouselProps>(), {
-   pagination: 'dots',
-   paginationPosition: 'bottom-center',
-   direction: 'horizontal',
-   autoPlay: false,
-   autoPlayInterval: 3000,
-   itemsToShow: 1,
-   currentItem: 0,
-   mousewheel: true,
    gap: 0,
    speed: 300,
-   paginationSize: 'md',
-   easing: 'ease',
    loop: false,
+   itemsToShow: 1,
+   currentItem: 0,
+   easing: 'ease',
+   pagination: 'dots',
+   autoPlay: false,
+   mousewheel: true,
+   paginationSize: 'md',
+   autoPlayInterval: 3000,
+   direction: 'horizontal',
+   paginationPosition: 'bottom-center',
 })
 
 const containerRef = ref<HTMLElement | null>(null)
@@ -39,18 +39,18 @@ const carousel = useCarousel({
 })
 
 const {
-   carouselTrack,
-   carouselContainer,
    state,
-   canGoNext,
-   canGoPrev,
-   progress,
-   visibleSlideIndices,
-   goToSlide,
    goNext,
    goPrev,
+   progress,
+   canGoNext,
+   canGoPrev,
+   goToSlide,
+   carouselTrack,
    trackStyle,
+   carouselContainer,
    keyboardComposable,
+   visibleSlideIndices,
 } = carousel
 
 // CRITICAL FIX: Proper SSR slide limiting logic restored
