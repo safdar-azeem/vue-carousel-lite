@@ -1,0 +1,311 @@
+/* ==========================================
+   PERFORMANCE-OPTIMIZED CAROUSEL STYLES
+   ========================================== */
+
+.carousel-wrapper {
+   position: relative;
+   width: 100%;
+   contain: layout style paint;
+}
+
+.carousel {
+   position: relative;
+   width: 100%;
+   border-radius: 0.5rem;
+   max-width: var(--container-width);
+   overflow: hidden;
+   /* GPU acceleration but SSR-safe */
+   transform: translateZ(0);
+   will-change: auto;
+}
+
+.carousel-container {
+   position: relative;
+   width: 100%;
+   height: var(--container-height);
+   overflow: hidden;
+   cursor: grab;
+   touch-action: pan-y;
+   outline: none;
+   /* Performance optimizations */
+   contain: layout style;
+   transform: translateZ(0);
+}
+
+.carousel-focus-container {
+   outline: none;
+   position: relative;
+   border-radius: 0.5rem;
+   contain: layout;
+}
+
+.carousel-focus-container:focus {
+   outline: none;
+}
+
+/* CRITICAL FIX: SSR-friendly loading states */
+/* Don't hide content completely - just reduce opacity slightly */
+.carousel:not(.carousel--initialized) {
+   opacity: 1; /* Changed from 0.95 to 1 for SSR */
+   /* Remove visibility: hidden to show content immediately */
+}
+
+.carousel--initialized {
+   opacity: 1;
+   /* Smoother transition after initialization */
+   transition: opacity 0.15s ease-out;
+}
+
+.carousel-container:active {
+   cursor: grabbing;
+}
+
+/* Optimized touch-action for better scrolling performance */
+.carousel--vertical .carousel-container {
+   touch-action: pan-x;
+   overscroll-behavior: contain;
+   -webkit-overflow-scrolling: touch;
+}
+
+.carousel--horizontal .carousel-container {
+   touch-action: pan-y;
+   overscroll-behavior: contain;
+   -webkit-overflow-scrolling: touch;
+}
+
+/* Hide scrollbars efficiently */
+.carousel-container::-webkit-scrollbar {
+   display: none;
+   width: 0;
+   height: 0;
+}
+
+.carousel-container {
+   -ms-overflow-style: none;
+   scrollbar-width: none;
+}
+
+/* PERFORMANCE-CRITICAL: Optimized track styles */
+.carousel-track {
+   display: flex;
+   /* GPU acceleration with proper layering - but SSR safe */
+   transform: translate3d(0, 0, 0);
+   transform-style: preserve-3d;
+   backface-visibility: hidden;
+   perspective: 1000px;
+
+   /* Optimized transitions - only transform property */
+   transition-property: transform;
+   transition-duration: var(--carousel-transition-duration, 0.3s);
+   transition-timing-function: var(
+      --carousel-transition-timing,
+      cubic-bezier(0.25, 0.46, 0.45, 0.94)
+   );
+
+   /* Layout optimizations */
+   width: fit-content;
+   height: 100%;
+   contain: layout style;
+
+   /* Font rendering optimization */
+   -webkit-font-smoothing: antialiased;
+   -moz-osx-font-smoothing: grayscale;
+}
+
+/* UPDATED: Use CSS gap for proper spacing */
+.carousel-track-multiple {
+   gap: var(--carousel-gap);
+}
+
+/* will-change only when needed for performance */
+.carousel--initialized .carousel-track {
+   will-change: transform;
+}
+
+/* Disable transitions during drag for better performance */
+.carousel-track[data-dragging='true'] {
+   transition: none !important;
+   will-change: transform;
+}
+
+/* Vertical carousel optimizations */
+.carousel--vertical .carousel-track {
+   flex-direction: column;
+   width: 100%;
+   height: fit-content;
+   align-items: flex-start;
+}
+
+.carousel--vertical .carousel-track-multiple {
+   gap: var(--carousel-gap);
+}
+
+/* PERFORMANCE-CRITICAL: Optimized slide styles */
+.carousel-slide {
+   flex: 0 0 var(--carousel-slide-width);
+   min-width: 0;
+   min-height: 0;
+   position: relative;
+
+   /* GPU acceleration - but only when initialized to prevent SSR issues */
+   backface-visibility: hidden;
+   contain: layout style paint;
+   box-sizing: border-box;
+}
+
+.carousel--vertical .carousel-slide {
+   flex: 0 0 auto;
+   width: 100%;
+   height: var(--container-height);
+}
+
+/* Optimized slide content */
+.carousel-slide-content {
+   width: 100%;
+   height: 100%;
+   border-radius: 0.5rem;
+   overflow: hidden;
+   display: flex;
+   align-items: flex-start;
+   justify-content: center;
+   position: relative;
+
+   /* Performance optimizations - but SSR safe */
+   contain: layout style paint;
+}
+
+/* Apply GPU acceleration only after initialization */
+.carousel--initialized .carousel-slide-content {
+   transform: translateZ(0);
+}
+
+.carousel-default-content {
+   width: 100%;
+   height: 100%;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   font-size: 0.875rem;
+   font-weight: 500;
+
+   /* Font optimization */
+   text-rendering: optimizeSpeed;
+   -webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================
+   ADVANCED PERFORMANCE OPTIMIZATIONS
+   ========================================== */
+
+/* Optimize for different device pixel ratios */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+   .carousel--initialized .carousel-track,
+   .carousel--initialized .carousel-slide {
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
+   }
+}
+
+/* High refresh rate displays */
+@media (prefers-reduced-motion: no-preference) {
+   .carousel-track {
+      transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+   }
+
+   .carousel--initialized
+      .carousel-track-multiple
+      .carousel-slide.carouse-last-visible-slide:not(.slide-moving) {
+      transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+   }
+}
+
+/* Reduced motion support - critical for performance and accessibility */
+@media (prefers-reduced-motion: reduce) {
+   .carousel-track,
+   .carousel-track-multiple .carousel-slide.carouse-last-visible-slide:not(.slide-moving),
+   .carousel--initialized {
+      transition: none !important;
+      animation: none !important;
+   }
+
+   .carousel-track {
+      will-change: auto;
+   }
+}
+
+/* ==========================================
+   MEMORY AND LAYOUT OPTIMIZATIONS
+   ========================================== */
+
+/* Optimize for mobile devices */
+@media (max-width: 768px) {
+   .carousel--initialized .carousel-track {
+      /* Reduce complexity on mobile */
+      perspective: none;
+      transform-style: flat;
+   }
+
+   .carousel--initialized .carousel-slide {
+      /* Simplify transforms on mobile */
+      transform: translateZ(0);
+   }
+
+   .carousel-slide-content {
+      /* Reduce containment on mobile for better compatibility */
+      contain: layout style;
+   }
+}
+
+/* Optimize for high-end devices */
+@media (min-width: 1024px) and (min-height: 768px) {
+   .carousel--initialized .carousel-track {
+      /* Enhanced GPU acceleration for desktop */
+      transform-style: preserve-3d;
+      perspective: 2000px;
+   }
+
+   .carousel--initialized .carousel-slide {
+      /* Enhanced layering for desktop */
+      transform-style: preserve-3d;
+   }
+}
+
+/* ==========================================
+   FOCUS AND ACCESSIBILITY OPTIMIZATIONS
+   ========================================== */
+
+.carousel-focus-container:focus-visible {
+   outline: 2px solid rgba(59, 130, 246, 0.8);
+   outline-offset: 2px;
+   border-radius: 0.5rem;
+}
+
+/* ==========================================
+   PRINT OPTIMIZATIONS
+   ========================================== */
+
+@media print {
+   .carousel-track {
+      transition: none !important;
+      transform: none !important;
+      will-change: auto;
+   }
+
+   .carousel-slide {
+      transform: none !important;
+      break-inside: avoid;
+   }
+}
+
+/* Prevent browser defaults on child elements during dragging */
+.carousel-slide-content[data-dragging='true'] img,
+.carousel-slide-content[data-dragging='true'] a {
+   pointer-events: none; /* Disable pointer events on children during drag */
+   user-drag: none; /* Prevent image dragging */
+   -webkit-user-drag: none;
+}
+
+/* Ensure slide content is fully clickable when not dragging */
+.carousel-slide-content:not([data-dragging='true']) {
+   pointer-events: auto;
+}
