@@ -1,7 +1,7 @@
-import { ref, onMounted, onUnmounted, nextTick, Ref, ComputedRef, computed, readonly, unref } from 'vue'
-import type { SlidesPerView } from '../types'
 import { debounce } from '../utils/debounce'
+import type { SlidesPerView } from '../types'
 import { useWindowWidth } from './useWindowWidth'
+import { ref, onMounted, onUnmounted, nextTick, Ref, ComputedRef, computed, readonly, unref } from 'vue'
 
 interface DimensionsOptions {
    direction?: 'horizontal' | 'vertical'
