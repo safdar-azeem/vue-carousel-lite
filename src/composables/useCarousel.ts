@@ -1,11 +1,11 @@
-import { computed, ComputedRef, ref, Ref } from 'vue'
-import type { CarouselProps } from '../types'
-import { useAutoplay } from './useAutoplay'
-import { useCarouselState } from './useCarouselState'
 import { useDrag } from './useDrag'
 import { useHover } from './useHover'
-import { useKeyboard } from './useKeyboard'
 import { useWheel } from './useWheel'
+import { useAutoplay } from './useAutoplay'
+import { useKeyboard } from './useKeyboard'
+import type { CarouselProps } from '../types'
+import { computed, ComputedRef, ref, Ref } from 'vue'
+import { useCarouselState } from './useCarouselState'
 
 interface UseCarouselOptions {
    props: CarouselProps
