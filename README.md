@@ -1,6 +1,6 @@
 # Vue Carousel Lite
 
-Vue Carousel – A high-performance lightweight Vue 3 carousel with support for touch, mouse, keyboard, and wheel input, featuring GPU-accelerated transitions, responsive design, and Nuxt 3 SSR support.
+Vue Carousel – A high-performance lightweight Vue 3 carousel with support for Touch, Mouse, Keyboard, and Wheel input, featuring GPU-accelerated transitions, responsive design, and Nuxt 3 SSR support.
 
 ## Features
 
@@ -11,6 +11,10 @@ Vue Carousel – A high-performance lightweight Vue 3 carousel with support for 
 -  **Customizable**: Flexible props for direction, autoplay, gap, and more.
 -  **Touch and Mouse Support**: Drag and mousewheel interactions.
 -  **Nuxt 3 SSR Support**: Server-side rendering for better SEO.
+
+## Demo
+
+[Live Demo](https://vue-carousel-lite.vercel.app/)
 
 ## Installation
 
