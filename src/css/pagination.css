@@ -1,0 +1,492 @@
+/* ==========================================
+   CAROUSEL PAGINATION - CSS VARIABLES
+   ========================================== */
+
+.carousel-pagination {
+   /* === CORE LAYOUT VARIABLES === */
+   --carousel-pagination-gap: 0.5rem;
+   --carousel-pagination-padding: 1rem;
+   --carousel-pagination-z-index: 5;
+   --carousel-pagination-border-radius: 0.125rem;
+
+   /* === POSITIONING VARIABLES === */
+   --carousel-pagination-bottom-offset: 0rem;
+   --carousel-pagination-side-offset: 0.5rem;
+
+   /* === COLOR PALETTE === */
+   --carousel-pagination-primary-color: white;
+   --carousel-pagination-secondary-color: rgba(255, 255, 255, 0.3);
+   --carousel-pagination-accent-color: rgba(59, 130, 246, 0.5);
+   --carousel-pagination-text-color: white;
+   --carousel-pagination-border-color: rgba(0, 0, 0, 0.15);
+   --carousel-pagination-shadow-color: rgba(0, 0, 0, 0.1);
+
+   /* === BACKGROUND COLORS === */
+   --carousel-pagination-bg-inactive: var(--carousel-pagination-secondary-color);
+   --carousel-pagination-bg-hover: rgba(255, 255, 255, 0.8);
+   --carousel-pagination-bg-active: rgba(255, 255, 255, 0.9);
+   --carousel-pagination-bg-current: var(--carousel-pagination-primary-color);
+
+   /* === INTERACTIVE STATES === */
+   --carousel-pagination-focus-color: var(--carousel-pagination-accent-color);
+   --carousel-pagination-hover-scale: 1.1;
+   --carousel-pagination-active-scale: 1.25;
+   --carousel-pagination-disabled-opacity: 0.5;
+
+   /* === TYPOGRAPHY === */
+   --carousel-pagination-font-size: 0.875rem;
+   --carousel-pagination-font-weight: 500;
+   --carousel-pagination-font-weight-bold: 700;
+   --carousel-pagination-text-shadow: rgba(0, 0, 0, 0.8) 0.1px 0.5px 1px;
+
+   /* === DOTS SPECIFIC === */
+   --carousel-pagination-dot-size: 0.65em;
+   --carousel-pagination-dot-border-width: 0.5px;
+   --carousel-pagination-dot-hover-scale: var(--carousel-pagination-hover-scale);
+   --carousel-pagination-dot-current-scale: var(--carousel-pagination-active-scale);
+
+   /* === LINES SPECIFIC === */
+   --carousel-pagination-line-width: 2rem;
+   --carousel-pagination-line-height: 0.25rem;
+   --carousel-pagination-line-border-radius: var(--carousel-pagination-border-radius);
+   --carousel-pagination-line-gap: 0.25rem;
+
+   /* === VERTICAL LINES === */
+   --carousel-pagination-line-vertical-width: 0.25em;
+   --carousel-pagination-line-vertical-height: 1em;
+
+   /* === BUTTONS SPECIFIC === */
+   --carousel-pagination-button-size: 2.6rem;
+   --carousel-pagination-button-border-width: 1px;
+   --carousel-pagination-button-border-color: rgba(255, 255, 255, 0.6);
+   --carousel-pagination-button-bg: rgba(0, 0, 0, 0.4);
+   --carousel-pagination-button-hover-border: rgba(255, 255, 255, 0.4);
+   --carousel-pagination-button-hover-bg: rgba(0, 0, 0, 0.2);
+   --carousel-pagination-button-icon-size: 1.25rem;
+   --carousel-pagination-button-gap: 1rem;
+   --carousel-pagination-button-rotation: 90deg;
+   --carousel-pagination-button-scale: 0.9;
+   --carousel-pagination-button-backdrop-blur: 0px;
+
+   /* === FRACTION SPECIFIC === */
+   --carousel-pagination-fraction-border-color: rgba(255, 255, 255, 0.1);
+   --carousel-pagination-fraction-bg: rgba(0, 0, 0, 0.2);
+   --carousel-pagination-fraction-padding: 0.5rem 1rem;
+   --carousel-pagination-fraction-border-radius: 1rem;
+   --carousel-pagination-fraction-gap: 0.25rem;
+   --carousel-pagination-fraction-backdrop-blur: 4px;
+   --carousel-pagination-fraction-separator-opacity: 0.7;
+   --carousel-pagination-fraction-total-opacity: 0.9;
+
+   /* === PROGRESS BAR SPECIFIC === */
+   --carousel-pagination-progressbar-max-width: 200px;
+   --carousel-pagination-progressbar-track-height: 0.25rem;
+   --carousel-pagination-progressbar-track-bg: var(--carousel-pagination-secondary-color);
+   --carousel-pagination-progressbar-track-border-radius: var(--carousel-pagination-border-radius);
+   --carousel-pagination-progressbar-fill-bg: var(--carousel-pagination-primary-color);
+   --carousel-pagination-progressbar-fill-border-radius: var(--carousel-pagination-border-radius);
+
+   /* === ANIMATION & TRANSITIONS === */
+   --carousel-pagination-transition-duration: 0.3s;
+   --carousel-pagination-transition-timing: ease;
+   --carousel-pagination-transition: all var(--carousel-pagination-transition-duration)
+      var(--carousel-pagination-transition-timing);
+   --carousel-pagination-progressbar-transition: width var(--carousel-pagination-transition-duration)
+      var(--carousel-pagination-transition-timing);
+
+   /* === RESPONSIVE - MOBILE === */
+   --carousel-pagination-mobile-padding: 0.75rem;
+   --carousel-pagination-mobile-button-size: 2.5rem;
+   --carousel-pagination-mobile-button-icon-size: 1rem;
+   --carousel-pagination-mobile-dot-size: 0.625rem;
+   --carousel-pagination-mobile-line-width: 1.5rem;
+   --carousel-pagination-mobile-line-height: 0.1875rem;
+
+   /* === SPACING SYSTEM === */
+   --carousel-pagination-spacing-xs: 0.125rem;
+   --carousel-pagination-spacing-sm: 0.25rem;
+   --carousel-pagination-spacing-md: 0.5rem;
+   --carousel-pagination-spacing-lg: 1rem;
+   --carousel-pagination-spacing-xl: 2rem;
+}
+
+.carousel-pagination--sm {
+   --carousel-pagination-gap: 0.25rem;
+   --carousel-pagination-padding: 0.5rem;
+   --carousel-pagination-font-size: 0.75rem;
+   --carousel-pagination-button-size: 2rem;
+   --carousel-pagination-button-icon-size: 1rem;
+   --carousel-pagination-dot-size: 0.75em;
+   --carousel-pagination-line-width: 1.25rem;
+   --carousel-pagination-line-height: 0.2rem;
+   --carousel-pagination-fraction-padding: 0.25rem 0.5rem;
+}
+
+.carousel-pagination--lg {
+   --carousel-pagination-gap: 1rem;
+   --carousel-pagination-padding: 1.5rem;
+   --carousel-pagination-font-size: 1rem;
+   --carousel-pagination-button-size: 3.25rem;
+   --carousel-pagination-button-icon-size: 1.5rem;
+   --carousel-pagination-dot-size: 1em;
+   --carousel-pagination-line-width: 2.75rem;
+   --carousel-pagination-line-height: 0.375rem;
+   --carousel-pagination-fraction-padding: 0.75rem 1.25rem;
+}
+/* ==========================================
+   BASE PAGINATION COMPONENT
+   ========================================== */
+
+.carousel-pagination {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   gap: var(--carousel-pagination-gap);
+   padding: var(--carousel-pagination-padding);
+   z-index: var(--carousel-pagination-z-index);
+}
+
+/* ==========================================
+   POSITION MODIFIERS
+   ========================================== */
+
+.carousel-pagination--center {
+   padding: 0px !important;
+}
+
+.carousel-pagination--center .carousel-pagination-items .carousel-pagination-button:first-child {
+   position: absolute;
+   top: 50%;
+   left: var(--carousel-pagination-side-offset);
+   transform: translate(-50%, -50%);
+}
+
+.carousel-pagination--center .carousel-pagination-items .carousel-pagination-button:last-child {
+   position: absolute;
+   top: 50%;
+   right: var(--carousel-pagination-side-offset);
+   transform: translate(50%, -50%);
+}
+
+.carousel-pagination--bottom-center {
+   position: absolute;
+   bottom: var(--carousel-pagination-bottom-offset);
+   left: 50%;
+   transform: translateX(-50%);
+}
+
+.carousel-pagination--bottom-left {
+   position: absolute;
+   bottom: var(--carousel-pagination-side-offset);
+   left: var(--carousel-pagination-side-offset);
+}
+
+.carousel-pagination--bottom-right {
+   position: absolute;
+   bottom: var(--carousel-pagination-side-offset);
+   right: var(--carousel-pagination-side-offset);
+}
+
+.carousel-pagination--center-right {
+   position: absolute;
+   top: 50%;
+   right: var(--carousel-pagination-side-offset);
+   transform: translateY(-50%);
+   flex-direction: column;
+}
+
+.carousel-pagination--center-left {
+   position: absolute;
+   top: 50%;
+   left: var(--carousel-pagination-side-offset);
+   transform: translateY(-50%);
+   flex-direction: column;
+}
+
+/* ==========================================
+   VERTICAL ORIENTATION
+   ========================================== */
+
+.carousel-pagination--vertical.carousel-pagination--center-right .carousel-pagination-items,
+.carousel-pagination--vertical.carousel-pagination--center-left .carousel-pagination-items,
+.carousel-pagination--vertical.carousel-pagination--bottom-left .carousel-pagination-items,
+.carousel-pagination--vertical.carousel-pagination--bottom-right .carousel-pagination-items {
+   flex-direction: column;
+}
+
+.carousel-pagination--vertical.carousel-pagination--center-right .carousel-pagination-line,
+.carousel-pagination--vertical.carousel-pagination--center-left .carousel-pagination-line,
+.carousel-pagination--vertical.carousel-pagination--bottom-left .carousel-pagination-line,
+.carousel-pagination--vertical.carousel-pagination--bottom-right .carousel-pagination-line {
+   flex-direction: column;
+   width: var(--carousel-pagination-line-vertical-width) !important;
+   height: var(--carousel-pagination-line-vertical-height);
+}
+
+.carousel-pagination--vertical .carousel-pagination-button {
+   transform: rotate(var(--carousel-pagination-button-rotation))
+      scale(var(--carousel-pagination-button-scale));
+}
+
+/* ==========================================
+   DOTS PAGINATION
+   ========================================== */
+
+.carousel-pagination-dots {
+   display: flex;
+   align-items: center;
+   gap: var(--carousel-pagination-gap);
+}
+
+.carousel-pagination-dot {
+   padding: 0px !important;
+   width: var(--carousel-pagination-dot-size);
+   height: var(--carousel-pagination-dot-size);
+   min-width: var(--carousel-pagination-dot-size);
+   min-height: var(--carousel-pagination-dot-size);
+   border-radius: 50%;
+   border: var(--carousel-pagination-dot-border-width) solid var(--carousel-pagination-border-color);
+   background-color: var(--carousel-pagination-bg-inactive);
+   cursor: pointer;
+   transition: var(--carousel-pagination-transition);
+   outline: none;
+   position: relative;
+}
+
+.carousel-pagination-dot:hover {
+   background-color: var(--carousel-pagination-bg-hover);
+   transform: scale(var(--carousel-pagination-dot-hover-scale));
+}
+
+.carousel-pagination-dot--active {
+   background-color: var(--carousel-pagination-bg-active);
+}
+
+.carousel-pagination-dot--current {
+   background-color: var(--carousel-pagination-bg-current);
+   transform: scale(var(--carousel-pagination-dot-current-scale));
+}
+
+.carousel-pagination-dot:focus {
+   box-shadow: 0 0 0 2px var(--carousel-pagination-focus-color);
+}
+
+/* ==========================================
+   LINES PAGINATION
+   ========================================== */
+
+.carousel-pagination-lines {
+   display: flex;
+   align-items: center;
+   gap: var(--carousel-pagination-line-gap);
+}
+
+.carousel-pagination-line {
+   padding: 0px !important;
+   width: var(--carousel-pagination-line-width);
+   height: var(--carousel-pagination-line-height);
+   border: var(--carousel-pagination-dot-border-width) solid var(--carousel-pagination-border-color);
+   background-color: var(--carousel-pagination-bg-inactive);
+   cursor: pointer;
+   transition: var(--carousel-pagination-transition);
+   outline: none;
+   border-radius: var(--carousel-pagination-line-border-radius);
+   position: relative;
+}
+
+.carousel-pagination-line:hover {
+   background-color: var(--carousel-pagination-bg-hover);
+}
+
+.carousel-pagination-line--active {
+   background-color: var(--carousel-pagination-bg-active);
+}
+
+.carousel-pagination-line--current {
+   background-color: var(--carousel-pagination-bg-current);
+}
+
+.carousel-pagination-line:focus {
+   box-shadow: 0 0 0 2px var(--carousel-pagination-focus-color);
+}
+
+/* ==========================================
+   BUTTONS PAGINATION
+   ========================================== */
+
+.carousel-pagination-buttons {
+   display: flex;
+   align-items: center;
+   gap: var(--carousel-pagination-button-gap);
+}
+
+.carousel-pagination-button {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   width: var(--carousel-pagination-button-size);
+   height: var(--carousel-pagination-button-size);
+   border: var(--carousel-pagination-button-border-width) solid
+      var(--carousel-pagination-button-border-color);
+   background-color: var(--carousel-pagination-button-bg);
+   border-radius: 50%;
+   cursor: pointer;
+   transition: var(--carousel-pagination-transition);
+   outline: none;
+   color: var(--carousel-pagination-text-color);
+   backdrop-filter: blur(var(--carousel-pagination-button-backdrop-blur));
+   position: relative;
+}
+
+.carousel-pagination-button:hover:not(:disabled) {
+   border-color: var(--carousel-pagination-button-hover-border);
+   background-color: var(--carousel-pagination-button-hover-bg);
+}
+
+.carousel-pagination-button:focus {
+   box-shadow: 0 0 0 2px var(--carousel-pagination-focus-color);
+}
+
+.carousel-pagination-button--disabled {
+   opacity: var(--carousel-pagination-disabled-opacity);
+   cursor: not-allowed;
+}
+
+.carousel-pagination-button svg {
+   width: var(--carousel-pagination-button-icon-size);
+   height: var(--carousel-pagination-button-icon-size);
+   transition: transform var(--carousel-pagination-transition-duration)
+      var(--carousel-pagination-transition-timing);
+}
+
+/* ==========================================
+   FRACTION PAGINATION
+   ========================================== */
+
+.carousel-pagination-fraction {
+   display: flex;
+   align-items: center;
+   gap: var(--carousel-pagination-fraction-gap);
+   border: var(--carousel-pagination-button-border-width) solid
+      var(--carousel-pagination-fraction-border-color);
+   background-color: var(--carousel-pagination-fraction-bg);
+   color: var(--carousel-pagination-text-color);
+   padding: var(--carousel-pagination-fraction-padding);
+   border-radius: var(--carousel-pagination-fraction-border-radius);
+   font-size: var(--carousel-pagination-font-size);
+   font-weight: var(--carousel-pagination-font-weight);
+   backdrop-filter: blur(var(--carousel-pagination-fraction-backdrop-blur));
+   text-shadow: var(--carousel-pagination-text-shadow);
+   position: relative;
+}
+
+.carousel-pagination-fraction-current {
+   font-weight: var(--carousel-pagination-font-weight-bold);
+}
+
+.carousel-pagination-fraction-separator {
+   opacity: var(--carousel-pagination-fraction-separator-opacity);
+}
+
+.carousel-pagination-fraction-total {
+   opacity: var(--carousel-pagination-fraction-total-opacity);
+}
+
+/* ==========================================
+   PROGRESS BAR PAGINATION
+   ========================================== */
+
+.carousel-pagination-progressbar {
+   width: 100%;
+   max-width: var(--carousel-pagination-progressbar-max-width);
+   position: relative;
+}
+
+.carousel-pagination-progressbar-track {
+   width: 100%;
+   height: var(--carousel-pagination-progressbar-track-height);
+   background-color: var(--carousel-pagination-progressbar-track-bg);
+   border-radius: var(--carousel-pagination-progressbar-track-border-radius);
+   overflow: hidden;
+   position: relative;
+}
+
+.carousel-pagination-progressbar-fill {
+   height: 100%;
+   background-color: var(--carousel-pagination-progressbar-fill-bg);
+   border-radius: var(--carousel-pagination-progressbar-fill-border-radius);
+   transition: var(--carousel-pagination-progressbar-transition);
+   position: relative;
+}
+
+/* ==========================================
+   ACCESSIBILITY ENHANCEMENTS
+   ========================================== */
+
+.carousel-pagination-dot:focus-visible,
+.carousel-pagination-line:focus-visible,
+.carousel-pagination-button:focus-visible {
+   box-shadow: 0 0 0 3px var(--carousel-pagination-focus-color);
+   outline: none;
+}
+
+/* ==========================================
+   REDUCED MOTION SUPPORT
+   ========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+   .carousel-pagination-dot,
+   .carousel-pagination-line,
+   .carousel-pagination-button,
+   .carousel-pagination-button svg,
+   .carousel-pagination-progressbar-fill {
+      transition: none !important;
+   }
+}
+
+/* ==========================================
+   RESPONSIVE DESIGN - MOBILE
+   ========================================== */
+
+@media (max-width: 640px) {
+   .carousel-pagination {
+      padding: var(--carousel-pagination-mobile-padding);
+   }
+
+   .carousel-pagination-button {
+      width: var(--carousel-pagination-mobile-button-size);
+      height: var(--carousel-pagination-mobile-button-size);
+   }
+
+   .carousel-pagination-button svg {
+      width: var(--carousel-pagination-mobile-button-icon-size);
+      height: var(--carousel-pagination-mobile-button-icon-size);
+   }
+
+   .carousel-pagination-dot {
+      width: var(--carousel-pagination-mobile-dot-size);
+      height: var(--carousel-pagination-mobile-dot-size);
+   }
+
+   .carousel-pagination-line {
+      width: var(--carousel-pagination-mobile-line-width);
+      height: var(--carousel-pagination-mobile-line-height);
+   }
+}
+
+/* ==========================================
+   HIGH CONTRAST MODE SUPPORT
+   ========================================== */
+
+@media (prefers-contrast: high) {
+   .carousel-pagination-dot,
+   .carousel-pagination-line,
+   .carousel-pagination-button {
+      border-width: 2px;
+   }
+
+   .carousel-pagination-dot--current,
+   .carousel-pagination-line--current {
+      outline: 2px solid;
+   }
+}
