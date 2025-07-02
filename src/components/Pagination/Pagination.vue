@@ -1,25 +1,25 @@
 <script setup lang="ts">
-import type { CarouselProps, PaginationType } from '../../types/'
-import PaginationButtons from './PaginationButtons.vue'
+import { computed } from 'vue'
 import PaginationDots from './PaginationDots.vue'
 import PaginationLines from './PaginationLines.vue'
+import PaginationButtons from './PaginationButtons.vue'
 import PaginationFraction from './PaginationFraction.vue'
-import { computed } from 'vue'
+import type { CarouselProps, PaginationType } from '../../types/'
 
 interface PaginationProps {
-   type: CarouselProps['pagination']
-   position: CarouselProps['paginationPosition']
-   direction: CarouselProps['direction']
-   currentIndex: number
-   totalSlides: number
-   itemsToShow: number
-   paginationSize?: CarouselProps['paginationSize']
-   visibleSlideIndices: number[]
    canGoNext: boolean
    canGoPrev: boolean
-   onGoToSlide: (index: number) => void
+   totalSlides: number
+   itemsToShow: number
+   currentIndex: number
    onGoNext: () => void
    onGoPrev: () => void
+   visibleSlideIndices: number[]
+   type: CarouselProps['pagination']
+   onGoToSlide: (index: number) => void
+   direction: CarouselProps['direction']
+   position: CarouselProps['paginationPosition']
+   paginationSize?: CarouselProps['paginationSize']
 }
 
 const props = defineProps<PaginationProps>()
