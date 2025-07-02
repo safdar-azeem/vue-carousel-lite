@@ -3,15 +3,15 @@ import type { CarouselProps, CarouselState } from '../types'
 import { debounce } from '../utils/debounce'
 
 interface UseWheelOptions {
-   containerRef: Ref<HTMLElement | null>
-   state: CarouselState
-   props: CarouselProps
    goNext: () => void
    goPrev: () => void
    goNextPage: () => void
    goPrevPage: () => void
+   state: CarouselState
+   props: CarouselProps
    canGoNext: ComputedRef<boolean>
    canGoPrev: ComputedRef<boolean>
+   containerRef: Ref<HTMLElement | null>
 }
 
 export function useWheel({
