@@ -218,7 +218,14 @@ onMounted(() => {
             :on-go-next="goNext"
             :on-go-prev="goPrev"
             :is-pagination-visible="isPaginationVisible"
-            :is-mouse-near-edge="isMouseNearEdge" />
+            :is-mouse-near-edge="isMouseNearEdge">
+            <template #prev-icon>
+               <slot name="prev-icon" />
+            </template>
+            <template #next-icon>
+               <slot name="next-icon" />
+            </template>
+         </Pagination>
       </div>
    </div>
 </template>
