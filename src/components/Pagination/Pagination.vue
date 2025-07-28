@@ -87,7 +87,14 @@ const getPosition = (type: PaginationType) => {
          :on-go-next="onGoNext"
          :on-go-prev="onGoPrev"
          :is-mouse-near-edge="isMouseNearEdge"
-         :position="getPosition('buttons')" />
+         :position="getPosition('buttons')">
+         <template #prev-icon>
+            <slot name="prev-icon" />
+         </template>
+         <template #next-icon>
+            <slot name="next-icon" />
+         </template>
+      </PaginationButtons>
    </div>
    <div
       :class="[...positionClasses, getPosition('fraction')]"
