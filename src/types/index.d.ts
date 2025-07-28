@@ -14,6 +14,8 @@ export type PaginationPosition =
    | 'center-right'
    | 'bottom'
 
+export type PaginationVisibility = 'always' | 'hover'
+
 export interface CarouselProps {
    data: any[]
    gap?: number
@@ -30,6 +32,7 @@ export interface CarouselProps {
    direction?: 'horizontal' | 'vertical'
    pagination?: PaginationType | PaginationType[]
    paginationPosition?: PaginationPosition | PaginationPosition[]
+   paginationVisibility?: PaginationVisibility | PaginationVisibility[]
 }
 
 export interface CarouselState {

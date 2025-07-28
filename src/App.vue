@@ -232,9 +232,10 @@ const toggleAllCode = () => {
                <Carousel
                   :key="carouselKey"
                   :data="data"
-                  :pagination="pagination"
+                  :pagination="['dots', 'buttons']"
+                  :pagination-visibility="['always', 'hover']"
+                  :pagination-position="['bottom-center', 'center']"
                   :pagination-size="paginationSize"
-                  :pagination-position="paginationPosition"
                   :direction="direction"
                   :auto-play="autoPlay"
                   :auto-play-interval="autoPlayInterval"
@@ -247,10 +248,6 @@ const toggleAllCode = () => {
                   <template #default="{ item }">
                      <div class="carousel-slide">
                         <img :src="item" class="carousel-image" />
-                        <div class="slide-overlay">
-                           <h4>Beautiful Landscape</h4>
-                           <p>High quality nature photography</p>
-                        </div>
                      </div>
                   </template>
                </Carousel>
