@@ -27,80 +27,43 @@ export function useWheel({
 }: UseWheelOptions) {
    const isWheeling = ref(false)
    let wheelTimeout: NodeJS.Timeout | null = null
-   const directionLock = ref<'horizontal' | 'vertical' | null>(null)
-   const accumulatedDeltaY = ref(0)
-   const VERTICAL_THRESHOLD = 30
 
-   // Add wheel event throttling to prevent double navigation
-   const lastWheelTime = ref(0)
-   const WHEEL_THROTTLE_DELAY = 200 // Minimum time between wheel navigations
-   const wheelEventQueue = ref<WheelEvent[]>([])
-   let isProcessingWheel = false
-
+   // Restore the original debounced reset logic
    const resetWheelState = debounce(() => {
       state.isWheeling = false
       isWheeling.value = false
-      directionLock.value = null
-      accumulatedDeltaY.value = 0
-      wheelEventQueue.value = []
-      isProcessingWheel = false
-   }, 150)
+   }, 300)
 
-   // Process wheel events in a controlled manner
-   const processWheelEvent = async (e: WheelEvent) => {
-      if (isProcessingWheel) return
-
-      isProcessingWheel = true
-      const currentTime = Date.now()
-
-      // Throttle wheel events to prevent rapid fire
-      if (currentTime - lastWheelTime.value < WHEEL_THROTTLE_DELAY) {
-         isProcessingWheel = false
-         return
-      }
-
-      lastWheelTime.value = currentTime
+   const handleWheel = (e: WheelEvent) => {
+      if (!props.mousewheel || state.isDragging) return
 
       const isHorizontal = props.direction === 'horizontal'
       const primaryDelta = isHorizontal ? e.deltaX : e.deltaY
       const absPrimaryDelta = Math.abs(primaryDelta)
+
+      // Restore original boundary checks
+      const isAtFirstSlide = !canGoPrev.value
+      const isAtLastSlide = !canGoNext.value
+
+      // Determine vertical deltas regardless of direction
       const verticalDelta = e.deltaY
-      const absVerticalDelta = Math.abs(verticalDelta)
 
-      // Accumulate vertical delta for threshold checking
-      accumulatedDeltaY.value += absVerticalDelta
+      const isScrollingToPrevFromFirst = verticalDelta < 0 && isAtFirstSlide
+      const isScrollingToNextFromLast = verticalDelta > 0 && isAtLastSlide
 
-      // Determine scroll direction if not locked
-      if (!directionLock.value) {
-         if (absPrimaryDelta > absVerticalDelta && absPrimaryDelta > 10) {
-            directionLock.value = 'horizontal'
-         } else if (absVerticalDelta > absPrimaryDelta && absVerticalDelta > 10) {
-            directionLock.value = 'vertical'
-         }
+      // Allow parent scroll prevention only for vertical direction at boundaries
+      if ((isScrollingToPrevFromFirst || isScrollingToNextFromLast) && props.direction === 'vertical') {
+         // Don't prevent default - let parent handle the vertical scroll
+         return
       }
 
-      // Allow parent scrolling for vertical direction if threshold is met
-      if (
-         isHorizontal &&
-         directionLock.value === 'vertical' &&
-         accumulatedDeltaY.value > VERTICAL_THRESHOLD
-      ) {
-         isProcessingWheel = false
-         return // Let parent handle vertical scroll
-      }
-
-      // Handle carousel navigation with strict conditions
-      if (
-         (isHorizontal && directionLock.value === 'horizontal') ||
-         (!isHorizontal && directionLock.value === 'vertical') ||
-         (!directionLock.value && absPrimaryDelta >= 10)
-      ) {
+      // For carousel direction scrolling within bounds, prevent default to block parent scroll
+      if (absPrimaryDelta >= 1) {
          e.preventDefault()
          e.stopPropagation()
 
-         if (absPrimaryDelta < 10) {
+         if (absPrimaryDelta < 30) {
             resetWheelState()
-            isProcessingWheel = false
             return
          }
 
@@ -108,20 +71,13 @@ export function useWheel({
             clearTimeout(wheelTimeout)
          }
 
-         // Prevent navigation if already transitioning
-         if (state.isTransitioning) {
-            isProcessingWheel = false
-            return
-         }
-
          state.isWheeling = true
          isWheeling.value = true
 
-         const isPageScroll = absPrimaryDelta > 100
+         const isPageScroll = absPrimaryDelta > 130
 
-         // Single navigation call with strict boundary checks
-         if (primaryDelta > 0) {
-            if (canGoNext.value && !state.isTransitioning) {
+         if (primaryDelta > 20) {
+            if (canGoNext.value) {
                if (isPageScroll) {
                   goNextPage()
                } else {
@@ -129,7 +85,7 @@ export function useWheel({
                }
             }
          } else {
-            if (canGoPrev.value && !state.isTransitioning) {
+            if (canGoPrev.value) {
                if (isPageScroll) {
                   goPrevPage()
                } else {
@@ -138,31 +94,7 @@ export function useWheel({
             }
          }
 
-         // Add additional delay before allowing next wheel event
-         setTimeout(() => {
-            isProcessingWheel = false
-         }, 50)
-
          resetWheelState()
-      } else {
-         isProcessingWheel = false
-      }
-   }
-
-   const handleWheel = (e: WheelEvent) => {
-      if (!props.mousewheel || state.isDragging || state.isTransitioning) return
-
-      // Queue the event and process it
-      wheelEventQueue.value.push(e)
-
-      // Process only the latest event, discard others
-      if (wheelEventQueue.value.length > 1) {
-         wheelEventQueue.value = [wheelEventQueue.value.pop()!]
-      }
-
-      const latestEvent = wheelEventQueue.value[0]
-      if (latestEvent) {
-         processWheelEvent(latestEvent)
       }
    }
 
@@ -170,6 +102,8 @@ export function useWheel({
       const container = containerRef.value
       if (!container || !props.mousewheel) return
 
+      // Use passive: false to allow preventDefault when needed
+      // This is critical for proper parent scroll prevention
       container.addEventListener('wheel', handleWheel, {
          passive: false,
          capture: false,
@@ -186,9 +120,6 @@ export function useWheel({
          clearTimeout(wheelTimeout)
          wheelTimeout = null
       }
-
-      wheelEventQueue.value = []
-      isProcessingWheel = false
    })
 
    return {
