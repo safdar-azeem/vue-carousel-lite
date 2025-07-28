@@ -28,11 +28,19 @@ export function useWheel({
    const isWheeling = ref(false)
    let wheelTimeout: NodeJS.Timeout | null = null
 
-   // Restore the original debounced reset logic
+   const wheelOptions = {
+      threshold: props.wheelOptions?.threshold ?? 30,
+      velocityThreshold: props.wheelOptions?.velocityThreshold ?? 10,
+      pageScrollThreshold: props.wheelOptions?.pageScrollThreshold ?? 100,
+      debounceTime: props.wheelOptions?.debounceTime ?? 10,
+      preventDefault: true,
+      stopPropagation: true,
+   }
+
    const resetWheelState = debounce(() => {
       state.isWheeling = false
       isWheeling.value = false
-   }, 300)
+   }, wheelOptions.debounceTime || 10)
 
    const handleWheel = (e: WheelEvent) => {
       if (!props.mousewheel || state.isDragging) return
@@ -41,28 +49,26 @@ export function useWheel({
       const primaryDelta = isHorizontal ? e.deltaX : e.deltaY
       const absPrimaryDelta = Math.abs(primaryDelta)
 
-      // Restore original boundary checks
       const isAtFirstSlide = !canGoPrev.value
       const isAtLastSlide = !canGoNext.value
 
-      // Determine vertical deltas regardless of direction
       const verticalDelta = e.deltaY
-
       const isScrollingToPrevFromFirst = verticalDelta < 0 && isAtFirstSlide
       const isScrollingToNextFromLast = verticalDelta > 0 && isAtLastSlide
 
-      // Allow parent scroll prevention only for vertical direction at boundaries
       if ((isScrollingToPrevFromFirst || isScrollingToNextFromLast) && props.direction === 'vertical') {
-         // Don't prevent default - let parent handle the vertical scroll
          return
       }
 
-      // For carousel direction scrolling within bounds, prevent default to block parent scroll
       if (absPrimaryDelta >= 1) {
-         e.preventDefault()
-         e.stopPropagation()
+         if (wheelOptions.preventDefault) {
+            e.preventDefault()
+         }
+         if (wheelOptions.stopPropagation) {
+            e.stopPropagation()
+         }
 
-         if (absPrimaryDelta < 30) {
+         if (absPrimaryDelta < wheelOptions.threshold) {
             resetWheelState()
             return
          }
@@ -74,9 +80,9 @@ export function useWheel({
          state.isWheeling = true
          isWheeling.value = true
 
-         const isPageScroll = absPrimaryDelta > 130
+         const isPageScroll = absPrimaryDelta > wheelOptions.pageScrollThreshold
 
-         if (primaryDelta > 20) {
+         if (primaryDelta > wheelOptions.velocityThreshold) {
             if (canGoNext.value) {
                if (isPageScroll) {
                   goNextPage()
@@ -84,7 +90,7 @@ export function useWheel({
                   goNext()
                }
             }
-         } else {
+         } else if (primaryDelta < -wheelOptions.velocityThreshold) {
             if (canGoPrev.value) {
                if (isPageScroll) {
                   goPrevPage()
@@ -102,10 +108,8 @@ export function useWheel({
       const container = containerRef.value
       if (!container || !props.mousewheel) return
 
-      // Use passive: false to allow preventDefault when needed
-      // This is critical for proper parent scroll prevention
       container.addEventListener('wheel', handleWheel, {
-         passive: false,
+         passive: !wheelOptions.preventDefault,
          capture: false,
       })
    })
