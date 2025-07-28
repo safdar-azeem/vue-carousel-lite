@@ -16,6 +16,15 @@ export type PaginationPosition =
 
 export type PaginationVisibility = 'always' | 'hover'
 
+export interface WheelOptions {
+   threshold?: number
+   velocityThreshold?: number
+   pageScrollThreshold?: number
+   debounceTime?: number
+   preventDefault?: boolean
+   stopPropagation?: boolean
+}
+
 export interface CarouselProps {
    data: any[]
    gap?: number
@@ -35,6 +44,7 @@ export interface CarouselProps {
    paginationVisibility?: PaginationVisibility | PaginationVisibility[]
    paginationHoverEdgeThreshold?: number
    paginationHoverInitialTimeout?: number
+   wheelOptions?: WheelOptions
 }
 
 export interface CarouselState {
@@ -68,13 +78,6 @@ export interface DragState {
    currentX: number
    currentY: number
    startTime: number
-}
-
-export interface WheelOptions {
-   threshold?: number
-   preventDefault?: boolean
-   stopPropagation?: boolean
-   velocityThreshold?: number
 }
 
 export interface AutoplayOptions {
