@@ -117,23 +117,23 @@ export function useCarouselState({ props, itemsToShow, totalSlides }: UseCarouse
 
    // Optimized navigation methods with boundary checks
    const goNext = (smooth = true) => {
-      if (!canGoNext.value || state.isTransitioning) return
+      if (!canGoNext.value || state.isTransitioning || state.isWheeling) return
       goToSlide(state.currentIndex + 1, smooth)
    }
 
    const goPrev = (smooth = true) => {
-      if (!canGoPrev.value || state.isTransitioning) return
+      if (!canGoPrev.value || state.isTransitioning || state.isWheeling) return
       goToSlide(state.currentIndex - 1, smooth)
    }
 
    const goNextPage = (smooth = true) => {
-      if (!canGoNext.value || state.isTransitioning) return
+      if (!canGoNext.value || state.isTransitioning || state.isWheeling) return
       const nextIndex = Math.min(state.currentIndex + itemsToShow.value, maxIndex.value)
       goToSlide(nextIndex, smooth)
    }
 
    const goPrevPage = (smooth = true) => {
-      if (!canGoPrev.value || state.isTransitioning) return
+      if (!canGoPrev.value || state.isTransitioning || state.isWheeling) return
       const prevIndex = Math.max(state.currentIndex - itemsToShow.value, 0)
       goToSlide(prevIndex, smooth)
    }
