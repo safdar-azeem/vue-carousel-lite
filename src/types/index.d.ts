@@ -33,6 +33,8 @@ export interface CarouselProps {
    pagination?: PaginationType | PaginationType[]
    paginationPosition?: PaginationPosition | PaginationPosition[]
    paginationVisibility?: PaginationVisibility | PaginationVisibility[]
+   paginationEdgeThreshold?: number
+   paginationInitialTimeout?: number
 }
 
 export interface CarouselState {
