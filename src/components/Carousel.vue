@@ -21,8 +21,15 @@ const props = withDefaults(defineProps<CarouselProps>(), {
    direction: 'horizontal',
    paginationVisibility: 'always',
    paginationHoverEdgeThreshold: 0.2,
-   paginationPosition: 'bottom-center',
    paginationHoverInitialTimeout: 1000,
+   wheelOptions: () => ({
+      threshold: 30,
+      velocityThreshold: 10,
+      pageScrollThreshold: 100,
+      debounceTime: 10,
+      preventDefault: true,
+      stopPropagation: true,
+   }),
 })
 
 const containerRef = ref<HTMLElement | null>(null)
