@@ -21,8 +21,6 @@ export interface WheelOptions {
    velocityThreshold?: number
    pageScrollThreshold?: number
    debounceTime?: number
-   preventDefault?: boolean
-   stopPropagation?: boolean
 }
 
 export interface CarouselProps {
