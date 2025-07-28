@@ -27,11 +27,15 @@ export function useWheel({
 }: UseWheelOptions) {
    const isWheeling = ref(false)
    let wheelTimeout: NodeJS.Timeout | null = null
+   const directionLock = ref<'horizontal' | 'vertical' | null>(null)
+   const accumulatedDeltaY = ref(0)
+   const VERTICAL_THRESHOLD = 30 // Pixels before allowing parent scroll
 
-   // Restore the original debounced reset logic
    const resetWheelState = debounce(() => {
       state.isWheeling = false
       isWheeling.value = false
+      directionLock.value = null
+      accumulatedDeltaY.value = 0
    }, 150)
 
    const handleWheel = (e: WheelEvent) => {
@@ -40,25 +44,37 @@ export function useWheel({
       const isHorizontal = props.direction === 'horizontal'
       const primaryDelta = isHorizontal ? e.deltaX : e.deltaY
       const absPrimaryDelta = Math.abs(primaryDelta)
-
-      // Restore original boundary checks
-      const isAtFirstSlide = !canGoPrev.value
-      const isAtLastSlide = !canGoNext.value
-
-      // Determine vertical deltas regardless of direction
       const verticalDelta = e.deltaY
+      const absVerticalDelta = Math.abs(verticalDelta)
 
-      const isScrollingToPrevFromFirst = verticalDelta < 0 && isAtFirstSlide
-      const isScrollingToNextFromLast = verticalDelta > 0 && isAtLastSlide
+      // Accumulate vertical delta for threshold checking
+      accumulatedDeltaY.value += absVerticalDelta
 
-      // Allow parent scroll prevention only for vertical direction at boundaries
-      if ((isScrollingToPrevFromFirst || isScrollingToNextFromLast) && props.direction === 'vertical') {
-         // Don't prevent default - let parent handle the vertical scroll
-         return
+      // Determine scroll direction if not locked
+      if (!directionLock.value) {
+         const absDeltaX = Math.abs(e.deltaX)
+         if (absPrimaryDelta > absVerticalDelta && absPrimaryDelta > 10) {
+            directionLock.value = 'horizontal'
+         } else if (absVerticalDelta > absPrimaryDelta && absVerticalDelta > 10) {
+            directionLock.value = 'vertical'
+         }
       }
 
-      // For carousel direction scrolling within bounds, prevent default to block parent scroll
-      if (absPrimaryDelta >= 1) {
+      // Allow parent scrolling for vertical direction if threshold is met
+      if (
+         isHorizontal &&
+         directionLock.value === 'vertical' &&
+         accumulatedDeltaY.value > VERTICAL_THRESHOLD
+      ) {
+         return // Let parent handle vertical scroll
+      }
+
+      // Handle carousel navigation
+      if (
+         (isHorizontal && directionLock.value === 'horizontal') ||
+         (!isHorizontal && directionLock.value === 'vertical') ||
+         (!directionLock.value && absPrimaryDelta >= 10)
+      ) {
          e.preventDefault()
          e.stopPropagation()
 
@@ -102,8 +118,6 @@ export function useWheel({
       const container = containerRef.value
       if (!container || !props.mousewheel) return
 
-      // Use passive: false to allow preventDefault when needed
-      // This is critical for proper parent scroll prevention
       container.addEventListener('wheel', handleWheel, {
          passive: false,
          capture: false,
