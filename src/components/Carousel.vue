@@ -13,16 +13,16 @@ const props = withDefaults(defineProps<CarouselProps>(), {
    itemsToShow: 1,
    currentItem: 0,
    easing: 'ease',
-   pagination: 'dots',
    autoPlay: false,
    mousewheel: true,
+   pagination: 'dots',
    paginationSize: 'md',
    autoPlayInterval: 3000,
    direction: 'horizontal',
-   paginationPosition: 'bottom-center',
    paginationVisibility: 'always',
-   paginationEdgeThreshold: 0.2,
-   paginationInitialTimeout: 1000,
+   paginationHoverEdgeThreshold: 0.2,
+   paginationPosition: 'bottom-center',
+   paginationHoverInitialTimeout: 1000,
 })
 
 const containerRef = ref<HTMLElement | null>(null)
@@ -64,8 +64,8 @@ const { isPaginationVisible, isMouseNearEdge } = usePaginationVisibility({
    paginationVisibility: props.paginationVisibility,
    paginationPosition: props.paginationPosition,
    direction: props.direction,
-   paginationEdgeThreshold: props.paginationEdgeThreshold,
-   paginationInitialTimeout: props.paginationInitialTimeout,
+   paginationHoverEdgeThreshold: props.paginationHoverEdgeThreshold,
+   paginationHoverInitialTimeout: props.paginationHoverInitialTimeout,
 })
 
 // CRITICAL FIX: Proper SSR slide limiting logic restored
