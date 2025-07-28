@@ -154,6 +154,95 @@ To enable server-side rendering (SSR) with Nuxt 3, follow these steps to ensure 
    })
    ```
 
+### 4. Hover Visibility Control
+
+Control pagination visibility with smart hover detection and directional awareness.
+
+```vue
+<script setup>
+import { ref } from 'vue'
+import Carousel from 'vue-carousel-lite'
+
+const data = [
+   'https://example.com/image1.jpg',
+   'https://example.com/image2.jpg',
+   'https://example.com/image3.jpg',
+]
+</script>
+
+<template>
+   <!-- Always visible dots, hover-activated buttons -->
+   <Carousel
+      :data="data"
+      :pagination="['dots', 'buttons']"
+      :pagination-position="['bottom-center', 'center']"
+      :pagination-visibility="['always', 'hover']"
+      :items-to-show="1">
+      <template #default="{ item }">
+         <img :src="item" alt="Slide" style="width: 100%; height: 100%; object-fit: cover;" />
+      </template>
+   </Carousel>
+
+   <!-- All pagination on hover -->
+   <Carousel
+      :data="data"
+      :pagination="['dots', 'buttons']"
+      :pagination-position="['bottom-center', 'center']"
+      :pagination-visibility="['hover', 'hover']"
+      :items-to-show="1">
+      <template #default="{ item }">
+         <img :src="item" alt="Slide" style="width: 100%; height: 100%; object-fit: cover;" />
+      </template>
+   </Carousel>
+
+   <!-- Individual button hover (left/right detection) -->
+   <Carousel
+      :data="data"
+      :pagination="['buttons']"
+      :pagination-position="['center']"
+      :pagination-visibility="['hover']"
+      :items-to-show="1">
+      <template #default="{ item }">
+         <img :src="item" alt="Slide" style="width: 100%; height: 100%; object-fit: cover;" />
+      </template>
+   </Carousel>
+</template>
+```
+
+### 5. Vertical Carousel with Hover Controls
+
+A vertical carousel with hover-activated pagination.
+
+```vue
+<script setup>
+import { ref } from 'vue'
+import Carousel from 'vue-carousel-lite'
+
+const data = [
+   'https://example.com/image1.jpg',
+   'https://example.com/image2.jpg',
+   'https://example.com/image3.jpg',
+]
+</script>
+
+<template>
+   <Carousel
+      :data="data"
+      direction="vertical"
+      :pagination="['dots', 'buttons']"
+      :pagination-position="['center-right', 'center']"
+      :pagination-visibility="['always', 'hover']"
+      :paginationHoverInitialTimeout="1000"
+      :paginationHoverEdgeThreshold="0.2"
+      :items-to-show="1"
+      style="height: 400px;">
+      <template #default="{ item }">
+         <img :src="item" alt="Slide" style="width: 100%; height: 100%; object-fit: cover;" />
+      </template>
+   </Carousel>
+</template>
+```
+
 ## Props
 
 | Prop                 | Type             | Default           | Description                                                                 |
@@ -175,9 +264,11 @@ To enable server-side rendering (SSR) with Nuxt 3, follow these steps to ensure 
 
 ## Slots
 
-| Slot      | Props             | Description                    |
-| --------- | ----------------- | ------------------------------ |
-| `default` | `{ item, index }` | Custom content for each slide. |
+| Slot        | Props             | Description                          |
+| ----------- | ----------------- | ------------------------------------ |
+| `default`   | `{ item, index }` | Custom content for each slide.       |
+| `prev-icon` | None              | Custom icon for the previous button. |
+| `next-icon` | None              | Custom icon for the next button.     |
 
 ## Exposed Methods
 
