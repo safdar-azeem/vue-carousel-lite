@@ -8,8 +8,8 @@ interface UsePaginationVisibilityOptions {
    paginationVisibility: CarouselProps['paginationVisibility']
    paginationPosition: CarouselProps['paginationPosition']
    direction: CarouselProps['direction']
-   paginationEdgeThreshold?: number
-   paginationInitialTimeout?: number
+   paginationHoverEdgeThreshold?: number
+   paginationHoverInitialTimeout?: number
 }
 
 interface PaginationVisibilityReturn {
@@ -23,8 +23,8 @@ export function usePaginationVisibility({
    paginationVisibility,
    paginationPosition,
    direction,
-   paginationEdgeThreshold = 0.2,
-   paginationInitialTimeout = 1000,
+   paginationHoverEdgeThreshold = 0.2,
+   paginationHoverInitialTimeout = 1000,
 }: UsePaginationVisibilityOptions): PaginationVisibilityReturn {
    const isPaginationVisible = ref<Record<string, boolean>>({})
    const isMouseNearEdge = ref<{ prev: boolean; next: boolean }>({ prev: false, next: false })
@@ -61,7 +61,7 @@ export function usePaginationVisibility({
             isPaginationVisible.value[type] = true
             setTimeout(() => {
                isPaginationVisible.value[type] = false
-            }, paginationInitialTimeout)
+            }, paginationHoverInitialTimeout)
          }
       })
    })
@@ -78,8 +78,8 @@ export function usePaginationVisibility({
 
       const threshold =
          direction === 'horizontal'
-            ? rect.width * paginationEdgeThreshold
-            : rect.height * paginationEdgeThreshold
+            ? rect.width * paginationHoverEdgeThreshold
+            : rect.height * paginationHoverEdgeThreshold
       const isHorizontal = direction === 'horizontal'
 
       // Reset edge flags
