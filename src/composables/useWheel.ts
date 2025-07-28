@@ -72,7 +72,6 @@ export function useWheel({
 
       // Determine scroll direction if not locked
       if (!directionLock.value) {
-         const absDeltaX = Math.abs(e.deltaX)
          if (absPrimaryDelta > absVerticalDelta && absPrimaryDelta > 10) {
             directionLock.value = 'horizontal'
          } else if (absVerticalDelta > absPrimaryDelta && absVerticalDelta > 10) {
