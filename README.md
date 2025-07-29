@@ -276,14 +276,13 @@ const data = [
 
 ## Exposed Methods
 
-| Method       | Parameters                          | Description                                 |
-| ------------ | ----------------------------------- | ------------------------------------------- |
-| `goToSlide`  | `(index: number, smooth?: boolean)` | Navigate to a specific slide.               |
-| `goNext`     | `(smooth?: boolean)`                | Navigate to the next slide.                 |
-| `goPrev`     | `(smooth?: boolean)`                | Navigate to the previous slide.             |
-| `goNextPage` | `(smooth?: boolean)`                | Navigate to the next page of slides.        |
-| `goPrevPage` | `(smooth?: boolean)`                | Navigate to the previous page of slides.    |
-| `focus`      | `()`                                | Focus the carousel for keyboard navigation. |
+| Method       | Parameters                          | Description                              |
+| ------------ | ----------------------------------- | ---------------------------------------- |
+| `goToSlide`  | `(index: number, smooth?: boolean)` | Navigate to a specific slide.            |
+| `goNext`     | `(smooth?: boolean)`                | Navigate to the next slide.              |
+| `goPrev`     | `(smooth?: boolean)`                | Navigate to the previous slide.          |
+| `goNextPage` | `(smooth?: boolean)`                | Navigate to the next page of slides.     |
+| `goPrevPage` | `(smooth?: boolean)`                | Navigate to the previous page of slides. |
 
 ## Styling
 
