@@ -4,7 +4,7 @@ import Pagination from './Pagination/Pagination.vue'
 import { useCarousel } from '../composables/useCarousel'
 import { useDimensions } from '../composables/useDimensions'
 import { usePaginationVisibility } from '../composables/usePaginationVisibility'
-import { computed, onBeforeMount, onMounted, readonly, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeMount, onMounted, readonly, ref, watch } from 'vue'
 
 const props = withDefaults(defineProps<CarouselProps>(), {
    gap: 0,
@@ -15,6 +15,7 @@ const props = withDefaults(defineProps<CarouselProps>(), {
    easing: 'ease',
    autoPlay: false,
    mousewheel: true,
+   draggable: true,
    pagination: 'dots',
    paginationSize: 'md',
    autoPlayInterval: 3000,
@@ -170,8 +171,12 @@ watch(
    { flush: 'post' }
 )
 
-onMounted(() => {
+onMounted(async () => {
    isInitialMount = false
+   await nextTick()
+   setTimeout(() => {
+      carouselContainer.value?.focus()
+   }, 500)
 })
 </script>
 
@@ -185,7 +190,10 @@ onMounted(() => {
          :aria-live="state.isTransitioning ? 'polite' : 'off'"
          :aria-busy="state.isTransitioning">
          <div :class="containerClass" :style="containerStyles">
-            <div ref="carouselContainer" class="carousel-container">
+            <div
+               ref="carouselContainer"
+               class="carousel-container"
+               :class="props?.draggable ? '' : 'carousel-container--no-drag'">
                <div
                   ref="carouselTrack"
                   :class="`carousel-track ${itemsToShow > 1 ? 'carousel-track-multiple' : ''}`"
@@ -240,7 +248,7 @@ onMounted(() => {
             :visibility="paginationVisibility"
             :current-index="state.currentIndex"
             :total-slides="props.data.length"
-            :itemsToShow="itemsToShow"
+            :items-to-show="itemsToShow"
             :progress="progress"
             :visible-slide-indices="visibleSlideIndices"
             :can-go-next="canGoNext"
