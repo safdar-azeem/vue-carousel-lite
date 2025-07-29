@@ -11,42 +11,6 @@ const data: string[] = [
    'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=450&fit=crop',
    'https://images.unsplash.com/photo-1568206222579-3d32da70596b?w=800&h=450&fit=crop',
    'https://images.unsplash.com/photo-1477840539360-4a1d23071046?w=800&h=450&fit=crop',
-   'https://images.unsplash.com/photo-1472791108553-c9405341e398?w=800&h=450&fit=crop',
-   'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&h=450&fit=crop',
-   'https://plus.unsplash.com/premium_photo-1672115681150-cce7a518bba1?w=800&h=450&fit=crop',
-   'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=450&fit=crop',
-   'https://images.unsplash.com/photo-1568206222579-3d32da70596b?w=800&h=450&fit=crop',
-   'https://images.unsplash.com/photo-1477840539360-4a1d23071046?w=800&h=450&fit=crop',
-   'https://images.unsplash.com/photo-1472791108553-c9405341e398?w=800&h=450&fit=crop',
-   'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&h=450&fit=crop',
-   'https://plus.unsplash.com/premium_photo-1672115681150-cce7a518bba1?w=800&h=450&fit=crop',
-   'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=450&fit=crop',
-   'https://images.unsplash.com/photo-1568206222579-3d32da70596b?w=800&h=450&fit=crop',
-   'https://images.unsplash.com/photo-1477840539360-4a1d23071046?w=800&h=450&fit=crop',
-   'https://images.unsplash.com/photo-1472791108553-c9405341e398?w=800&h=450&fit=crop',
-   'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&h=450&fit=crop',
-   'https://plus.unsplash.com/premium_photo-1672115681150-cce7a518bba1?w=800&h=450&fit=crop',
-   'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=450&fit=crop',
-   'https://images.unsplash.com/photo-1568206222579-3d32da70596b?w=800&h=450&fit=crop',
-   'https://images.unsplash.com/photo-1477840539360-4a1d23071046?w=800&h=450&fit=crop',
-   'https://images.unsplash.com/photo-1472791108553-c9405341e398?w=800&h=450&fit=crop',
-   'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&h=450&fit=crop',
-   'https://plus.unsplash.com/premium_photo-1672115681150-cce7a518bba1?w=800&h=450&fit=crop',
-   'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=450&fit=crop',
-   'https://images.unsplash.com/photo-1568206222579-3d32da70596b?w=800&h=450&fit=crop',
-   'https://images.unsplash.com/photo-1477840539360-4a1d23071046?w=800&h=450&fit=crop',
-   'https://images.unsplash.com/photo-1472791108553-c9405341e398?w=800&h=450&fit=crop',
-   'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&h=450&fit=crop',
-   'https://plus.unsplash.com/premium_photo-1672115681150-cce7a518bba1?w=800&h=450&fit=crop',
-   'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=450&fit=crop',
-   'https://images.unsplash.com/photo-1568206222579-3d32da70596b?w=800&h=450&fit=crop',
-   'https://images.unsplash.com/photo-1477840539360-4a1d23071046?w=800&h=450&fit=crop',
-   'https://images.unsplash.com/photo-1472791108553-c9405341e398?w=800&h=450&fit=crop',
-   'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&h=450&fit=crop',
-   'https://plus.unsplash.com/premium_photo-1672115681150-cce7a518bba1?w=800&h=450&fit=crop',
-   'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=450&fit=crop',
-   'https://images.unsplash.com/photo-1568206222579-3d32da70596b?w=800&h=450&fit=crop',
-   'https://images.unsplash.com/photo-1477840539360-4a1d23071046?w=800&h=450&fit=crop',
 ]
 
 // Reactive carousel properties
@@ -281,9 +245,9 @@ const toggleAllCode = () => {
                   :easing="easing"
                   :mousewheel="mousewheel"
                   :loop="loop">
-                  <template #default="{ index }">
+                  <template #default="{ item }">
                      <div class="carousel-slide">
-                        {{ index }}
+                        <img :src="item" class="carousel-image" />
                      </div>
                   </template>
                </Carousel>
@@ -632,8 +596,6 @@ body {
 
 .carousel-slide {
    max-height: 550px !important;
-   height: 550px !important;
-   background-color: rgb(218, 218, 218);
 }
 
 .carousel-slide:hover .slide-overlay {
