@@ -8,7 +8,7 @@ Vue Carousel – A high-performance lightweight Vue 3 carousel with support for 
 -  **Multiple Pagination Types**: Includes buttons, dots, lines, and fraction pagination.
 -  **Accessibility**: Keyboard navigation, ARIA attributes, and focus management.
 -  **Performance Optimized**: Uses GPU acceleration, memoization, and SSR-friendly rendering.
--  **Customizable**: Flexible props for direction, autoplay, gap, and more.
+-  **Customizable**: Flexible props for direction, autoplay, gap, pagination visibility, and more.
 -  **Touch and Mouse Support**: Drag and mousewheel interactions.
 -  **Nuxt 3 SSR Support**: Server-side rendering for better SEO.
 
