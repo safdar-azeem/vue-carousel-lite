@@ -8,7 +8,6 @@ interface UseCarouselStateOptions {
 }
 
 export function useCarouselState({ props, itemsToShow, totalSlides }: UseCarouselStateOptions) {
-   // Use shallowReactive for better performance since we control the state shape
    const state = reactive<CarouselState>({
       currentIndex: 0,
       isTransitioning: false,
@@ -20,7 +19,8 @@ export function useCarouselState({ props, itemsToShow, totalSlides }: UseCarouse
    // Virtual rendering state
    const renderWindowStart = ref(0)
    const renderWindowEnd = ref(0)
-   const BUFFER_SIZE = 5
+   const BUFFER_SIZE = props?.bufferSize || 5
+   const WINDOW_SIZE = props?.maxDomElements || 10
 
    // Track pending window updates to prevent visual glitches
    const pendingWindowUpdate = ref<{
@@ -106,18 +106,31 @@ export function useCarouselState({ props, itemsToShow, totalSlides }: UseCarouse
       return indices
    })
 
-   // Calculate optimal window position
    const calculateOptimalWindow = (targetIndex: number) => {
       const total = totalSlides.value
 
-      if (total <= itemsToShow.value + BUFFER_SIZE * 2) {
+      // If total slides are less than or equal to window size, return all
+      if (total <= WINDOW_SIZE) {
          return { start: 0, end: total - 1 }
       }
 
-      const idealStart = Math.max(0, targetIndex - BUFFER_SIZE)
-      const idealEnd = Math.min(total - 1, targetIndex + itemsToShow.value - 1 + BUFFER_SIZE)
+      let halfWindow = Math.floor(WINDOW_SIZE / 2)
+      let start = targetIndex - halfWindow
+      let end = targetIndex + halfWindow
 
-      return { start: idealStart, end: idealEnd }
+      // Adjust if start or end are out of bounds
+      if (start < 0) {
+         start = 0
+         end = WINDOW_SIZE - 1
+      } else if (end >= total) {
+         end = total - 1
+         start = end - WINDOW_SIZE + 1
+      }
+
+      console.log('idealStart :>> ', start)
+      console.log('idealEnd :>> ', end)
+
+      return { start, end }
    }
 
    // Virtual rendering: Calculate which slides should be rendered
@@ -335,23 +348,6 @@ export function useCarouselState({ props, itemsToShow, totalSlides }: UseCarouse
       },
       { flush: 'sync' }
    )
-
-   // Performance monitoring in development
-   if (process.env.NODE_ENV === 'development') {
-      let navigationCount = 0
-      const startTime = performance.now()
-
-      watch(
-         () => state.currentIndex,
-         () => {
-            navigationCount++
-            if (navigationCount % 10 === 0) {
-               const avgTime = (performance.now() - startTime) / navigationCount
-               console.log(`Carousel performance: ${avgTime.toFixed(2)}ms average per navigation`)
-            }
-         }
-      )
-   }
 
    return {
       state: readonly(state),
