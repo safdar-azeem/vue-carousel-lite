@@ -32,6 +32,11 @@
    transform: translateZ(0);
 }
 
+/* NEW: Style for non-draggable carousel */
+.carousel-container--no-drag {
+   cursor: default !important;
+}
+
 .carousel-focus-container {
    outline: none;
    position: relative;
@@ -58,6 +63,11 @@
 
 .carousel-container:active {
    cursor: grabbing;
+}
+
+/* NEW: Prevent grabbing cursor when not draggable */
+.carousel-container--no-drag:active {
+   cursor: default;
 }
 
 /* Optimized touch-action for better scrolling performance */
@@ -97,10 +107,7 @@
    /* Optimized transitions - only transform property */
    transition-property: transform;
    transition-duration: var(--carousel-transition-duration, 0.3s);
-   transition-timing-function: var(
-      --carousel-transition-timing,
-      cubic-bezier(0.25, 0.46, 0.45, 0.94)
-   );
+   transition-timing-function: var(--carousel-transition-timing, cubic-bezier(0.25, 0.46, 0.45, 0.94));
 
    /* Layout optimizations */
    width: fit-content;
