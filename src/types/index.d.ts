@@ -43,6 +43,8 @@ export interface CarouselProps {
    paginationHoverEdgeThreshold?: number
    paginationHoverInitialTimeout?: number
    wheelOptions?: WheelOptions
+   bufferSize?: number
+   maxDomElements?: number
 }
 
 export interface CarouselState {
