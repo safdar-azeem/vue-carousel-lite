@@ -75,20 +75,22 @@ export function useCarousel({ props, slideWidth, slideHeight, itemsToShow }: Use
       }
    })
 
-   // UPDATED: Initialize interaction composables with gap-aware calculations and virtual offset
-   const dragComposable = useDrag({
-      containerRef: carouselContainer,
-      trackRef: carouselTrack,
-      state,
-      props,
-      slideWidth,
-      slideHeight,
-      goToSlide,
-      canGoNext,
-      canGoPrev,
-      updateState,
-      virtualOffset,
-   })
+   // UPDATED: Conditionally initialize drag composable based on draggable prop
+   const dragComposable = props.draggable
+      ? useDrag({
+           containerRef: carouselContainer,
+           trackRef: carouselTrack,
+           state,
+           props,
+           slideWidth,
+           slideHeight,
+           goToSlide,
+           canGoNext,
+           canGoPrev,
+           updateState,
+           virtualOffset,
+        })
+      : null
 
    const wheelComposable = useWheel({
       containerRef: carouselContainer,
