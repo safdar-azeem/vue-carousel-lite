@@ -12,6 +12,7 @@ interface UseDragOptions {
    canGoNext: ComputedRef<boolean>
    canGoPrev: ComputedRef<boolean>
    updateState: (updates: Partial<CarouselState>) => void
+   virtualOffset: ComputedRef<number>
 }
 
 export function useDrag({
@@ -25,6 +26,7 @@ export function useDrag({
    canGoNext,
    canGoPrev,
    updateState,
+   virtualOffset,
 }: UseDragOptions) {
    const isDragging = ref(false)
    const startX = ref(0)
@@ -166,12 +168,18 @@ export function useDrag({
       deltaY.value = 0
       startTime.value = performance.now()
 
-      // UPDATED: Calculate initial transform accounting for gaps
+      // UPDATED: Calculate initial transform accounting for gaps and virtual offset
       const gap = props.gap || 0
       if (isHorizontal.value) {
-         initialTransform.value = -state.currentIndex * (slideWidth.value + gap)
+         const slideWithGap = slideWidth.value + gap
+         const virtualOffsetPx = virtualOffset.value * slideWithGap
+         const currentOffsetPx = state.currentIndex * slideWithGap
+         initialTransform.value = virtualOffsetPx - currentOffsetPx
       } else {
-         initialTransform.value = -state.currentIndex * (slideHeight.value + gap)
+         const slideWithGap = slideHeight.value + gap
+         const virtualOffsetPx = virtualOffset.value * slideWithGap
+         const currentOffsetPx = state.currentIndex * slideWithGap
+         initialTransform.value = virtualOffsetPx - currentOffsetPx
       }
 
       // Batch the state update
