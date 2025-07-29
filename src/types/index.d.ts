@@ -30,6 +30,7 @@ export interface CarouselProps {
    speed?: number
    easing?: string
    autoPlay?: boolean
+   draggable?: boolean
    mousewheel?: boolean
    currentItem?: number
    autoPlayInterval?: number
