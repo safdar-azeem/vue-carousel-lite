@@ -281,7 +281,7 @@ const toggleAllCode = () => {
                   :easing="easing"
                   :mousewheel="mousewheel"
                   :loop="loop">
-                  <template #default="{ item, index }">
+                  <template #default="{ index }">
                      <div class="carousel-slide">
                         {{ index }}
                      </div>
