@@ -38,24 +38,26 @@ export function useCarousel({ props, slideWidth, slideHeight, itemsToShow }: Use
       progress,
       updateState,
       visibleSlideIndices,
+      renderedSlideIndices,
+      virtualOffset,
    } = carouselState
 
-   // UPDATED: Calculate transform value accounting for gaps
+   // FIXED: Stable transform calculation that maintains position during window updates
    const transformValue = computed(() => {
       const gap = itemsToShow?.value > 1 ? props?.gap || 0 : 0
+      const slideWithGap =
+         props.direction === 'vertical' ? slideHeight.value + gap : slideWidth.value + gap
 
-      if (props.direction === 'vertical') {
-         // For vertical direction, we need to account for gaps between slides
-         const slideWithGap = slideHeight.value + gap
-         return -state.currentIndex * slideWithGap
-      }
+      // Calculate the relative position within the current render window
+      const relativeIndex = state.currentIndex - virtualOffset.value
 
-      // For horizontal direction, we need to account for gaps between slides
-      const slideWithGap = slideWidth.value + gap
-      return -state.currentIndex * slideWithGap
+      // Ensure we don't go negative (which would cause visual glitches)
+      const safeRelativeIndex = Math.max(0, relativeIndex)
+
+      return -safeRelativeIndex * slideWithGap
    })
 
-   // CSS transform style
+   // CSS transform style with stable transitions
    const trackStyle = computed(() => {
       const transform =
          props.direction === 'vertical'
@@ -73,7 +75,7 @@ export function useCarousel({ props, slideWidth, slideHeight, itemsToShow }: Use
       }
    })
 
-   // UPDATED: Initialize interaction composables with gap-aware calculations
+   // UPDATED: Initialize interaction composables with gap-aware calculations and virtual offset
    const dragComposable = useDrag({
       containerRef: carouselContainer,
       trackRef: carouselTrack,
@@ -85,6 +87,7 @@ export function useCarousel({ props, slideWidth, slideHeight, itemsToShow }: Use
       canGoNext,
       canGoPrev,
       updateState,
+      virtualOffset,
    })
 
    const wheelComposable = useWheel({
@@ -133,6 +136,8 @@ export function useCarousel({ props, slideWidth, slideHeight, itemsToShow }: Use
       canGoPrev,
       progress,
       visibleSlideIndices,
+      renderedSlideIndices,
+      virtualOffset,
 
       // Navigation
       goToSlide,
