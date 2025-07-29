@@ -62,6 +62,8 @@ const {
    carouselContainer,
    keyboardComposable,
    visibleSlideIndices,
+   renderedSlideIndices,
+   virtualOffset,
 } = carousel
 
 // Pagination visibility composable
@@ -75,16 +77,25 @@ const { isPaginationVisible, isMouseNearEdge } = usePaginationVisibility({
    paginationHoverInitialTimeout: props.paginationHoverInitialTimeout,
 })
 
-// CRITICAL FIX: Proper SSR slide limiting logic restored
+// CRITICAL FIX: Stable virtual rendering with consistent keys
 const slidesData = computed(() => {
    if (!isInitialized.value) {
-      if (props.direction === 'vertical') {
-         return props.data.slice(0, itemsToShow.value)
-      } else {
-         return props.data.slice(0, itemsToShow.value)
-      }
+      // SSR: render limited slides for initial load
+      const limit = itemsToShow.value
+      return props.data.slice(0, limit).map((item, index) => ({
+         item,
+         originalIndex: index,
+         isVirtual: false,
+      }))
    }
-   return props.data
+
+   // Virtual rendering: only render slides in the current window
+   const renderedIndices = renderedSlideIndices.value
+   return renderedIndices.map((index) => ({
+      item: props.data[index],
+      originalIndex: index,
+      isVirtual: true,
+   }))
 })
 
 // Memoized pagination visibility
@@ -93,7 +104,7 @@ const showPagination = computed(() => {
 })
 
 // More conservative slide class computation to prevent SSR issues
-const getSlideClasses = (index: number) => {
+const getSlideClasses = (originalIndex: number) => {
    const classes = ['carousel-slide']
 
    if (isInitialized.value) {
@@ -101,7 +112,10 @@ const getSlideClasses = (index: number) => {
          classes.push('slide-moving')
       }
 
-      if (props.direction === 'horizontal' && index === state.currentIndex - 1 + itemsToShow.value) {
+      if (
+         props.direction === 'horizontal' &&
+         originalIndex === state.currentIndex - 1 + itemsToShow.value
+      ) {
          classes.push('carouse-last-visible-slide')
       }
    }
@@ -113,6 +127,12 @@ const getSlideClasses = (index: number) => {
 const containerStyles = computed(() => ({
    ...containerCSSVars.value,
 }))
+
+// CRITICAL FIX: Ultra-stable key generation to prevent DOM thrashing
+const getSlideKey = (slideData: any) => {
+   // Use only the original index as the key - this prevents re-rendering during window shifts
+   return `slide-${slideData.originalIndex}`
+}
 
 // Expose carousel methods for external control
 defineExpose({
@@ -170,23 +190,28 @@ onMounted(() => {
                   :class="`carousel-track ${itemsToShow > 1 ? 'carousel-track-multiple' : ''}`"
                   :style="trackStyle">
                   <div
-                     v-for="(item, index) in slidesData"
-                     :key="`slide-${index}-${isInitialized ? 'full' : 'limited'}`"
+                     v-for="(slideData, renderIndex) in slidesData"
+                     :key="getSlideKey(slideData)"
                      v-memo="[
-                        item,
-                        index,
+                        slideData.item,
+                        slideData.originalIndex,
                         state?.isDragging,
                         state.currentIndex,
                         itemsToShow,
-                        visibleSlideIndices.includes(index),
+                        visibleSlideIndices.includes(slideData.originalIndex),
                         isInitialized,
                      ]"
-                     :class="getSlideClasses(index)"
-                     :aria-hidden="isInitialized ? !visibleSlideIndices.includes(index) : false"
+                     :data-index="renderIndex"
+                     :class="getSlideClasses(slideData.originalIndex)"
+                     :aria-hidden="
+                        isInitialized ? !visibleSlideIndices.includes(slideData.originalIndex) : false
+                     "
                      role="group">
                      <div class="carousel-slide-content">
-                        <slot :item="item" :index="index">
-                           <div class="carousel-default-content">Slide {{ index + 1 }}</div>
+                        <slot :item="slideData.item" :index="slideData.originalIndex">
+                           <div class="carousel-default-content">
+                              Slide {{ slideData.originalIndex + 1 }}
+                           </div>
                         </slot>
                      </div>
                   </div>
