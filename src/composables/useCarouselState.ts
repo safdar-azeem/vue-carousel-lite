@@ -17,6 +17,18 @@ export function useCarouselState({ props, itemsToShow, totalSlides }: UseCarouse
       isWheeling: false,
    })
 
+   // Virtual rendering state
+   const renderWindowStart = ref(0)
+   const renderWindowEnd = ref(0)
+   const BUFFER_SIZE = 5
+
+   // Track pending window updates to prevent visual glitches
+   const pendingWindowUpdate = ref<{
+      newStart: number
+      newEnd: number
+      targetIndex: number
+   } | null>(null)
+
    // Cached computations to prevent unnecessary recalculations
    const computedCache = ref({
       maxIndex: 0,
@@ -94,24 +106,126 @@ export function useCarouselState({ props, itemsToShow, totalSlides }: UseCarouse
       return indices
    })
 
-   // Optimized slide navigation with transition management
+   // Calculate optimal window position
+   const calculateOptimalWindow = (targetIndex: number) => {
+      const total = totalSlides.value
+
+      if (total <= itemsToShow.value + BUFFER_SIZE * 2) {
+         return { start: 0, end: total - 1 }
+      }
+
+      const idealStart = Math.max(0, targetIndex - BUFFER_SIZE)
+      const idealEnd = Math.min(total - 1, targetIndex + itemsToShow.value - 1 + BUFFER_SIZE)
+
+      return { start: idealStart, end: idealEnd }
+   }
+
+   // Virtual rendering: Calculate which slides should be rendered
+   const renderedSlideIndices = computed(() => {
+      const total = totalSlides.value
+      const windowStart = renderWindowStart.value
+      const windowEnd = renderWindowEnd.value
+
+      const indices: number[] = []
+      for (let i = windowStart; i <= windowEnd; i++) {
+         if (i >= 0 && i < total) {
+            indices.push(i)
+         }
+      }
+
+      return indices
+   })
+
+   // FIXED: Smart buffer edge detection with hysteresis
+   const shouldUpdateRenderWindow = (targetIndex: number) => {
+      const total = totalSlides.value
+
+      if (total <= itemsToShow.value + BUFFER_SIZE * 2) {
+         return false
+      }
+
+      const windowStart = renderWindowStart.value
+      const windowEnd = renderWindowEnd.value
+
+      // Initialize window if not set
+      if (windowStart === 0 && windowEnd === 0) {
+         return true
+      }
+
+      // Only update when we're at the very edge of safe zone (not before)
+      const leftEdge = windowStart + 2 // More conservative
+      const rightEdge = windowEnd - itemsToShow.value - 2 // More conservative
+
+      return targetIndex <= leftEdge || targetIndex >= rightEdge
+   }
+
+   // FIXED: Deferred window update to prevent visual glitches
+   const updateRenderWindow = (targetIndex: number, immediate = false) => {
+      const total = totalSlides.value
+
+      if (total <= itemsToShow.value + BUFFER_SIZE * 2) {
+         renderWindowStart.value = 0
+         renderWindowEnd.value = total - 1
+         return
+      }
+
+      const { start, end } = calculateOptimalWindow(targetIndex)
+
+      if (immediate) {
+         // Immediate update for initialization
+         renderWindowStart.value = start
+         renderWindowEnd.value = end
+         pendingWindowUpdate.value = null
+      } else {
+         // Defer the window update to prevent visual glitches
+         pendingWindowUpdate.value = { newStart: start, newEnd: end, targetIndex }
+      }
+   }
+
+   // Apply pending window update after transition
+   const applyPendingWindowUpdate = () => {
+      if (pendingWindowUpdate.value) {
+         const { newStart, newEnd } = pendingWindowUpdate.value
+         renderWindowStart.value = newStart
+         renderWindowEnd.value = newEnd
+         pendingWindowUpdate.value = null
+      }
+   }
+
+   // Virtual offset for transform calculation
+   const virtualOffset = computed(() => {
+      return renderWindowStart.value
+   })
+
+   // FIXED: Slide navigation with deferred window updates
    const goToSlide = (index: number, smooth = true) => {
       if (state.isTransitioning && smooth) return
 
       const targetIndex = Math.max(0, Math.min(index, maxIndex.value))
       if (targetIndex === state.currentIndex) return
 
-      // Batch state updates for better performance
+      // Check if we need a window update, but don't apply it yet
+      const needsWindowUpdate = shouldUpdateRenderWindow(targetIndex)
+
+      if (needsWindowUpdate && !state.isTransitioning) {
+         updateRenderWindow(targetIndex, false) // Prepare but don't apply
+      }
+
+      // Update current index immediately
+      state.currentIndex = targetIndex
+
+      // Handle transition
       if (smooth) {
          state.isTransitioning = true
-         state.currentIndex = targetIndex
 
-         // Use setTimeout instead of Promise for better performance
          setTimeout(() => {
             state.isTransitioning = false
+            // Apply window update after transition completes
+            applyPendingWindowUpdate()
          }, props.speed || 300)
       } else {
-         state.currentIndex = targetIndex
+         // For non-smooth transitions, apply window update immediately
+         applyPendingWindowUpdate()
       }
    }
 
@@ -183,6 +297,28 @@ export function useCarouselState({ props, itemsToShow, totalSlides }: UseCarouse
       }
    })()
 
+   // Initialize render window
+   watch(
+      () => totalSlides.value,
+      () => {
+         updateRenderWindow(state.currentIndex, true) // Immediate for initialization
+      },
+      { immediate: true }
+   )
+
+   // Watch for transition completion to apply pending updates
+   watch(
+      () => state.isTransitioning,
+      (isTransitioning) => {
+         if (!isTransitioning && pendingWindowUpdate.value) {
+            // Small delay to ensure smooth visual transition
+            setTimeout(() => {
+               applyPendingWindowUpdate()
+            }, 50)
+         }
+      }
+   )
+
    // Optimized watcher for itemsToShow changes
    let previousMaxIndex = maxIndex.value
    watch(
@@ -197,7 +333,7 @@ export function useCarouselState({ props, itemsToShow, totalSlides }: UseCarouse
             }
          }
       },
-      { flush: 'sync' } // Immediate execution for layout consistency
+      { flush: 'sync' }
    )
 
    // Performance monitoring in development
@@ -224,6 +360,8 @@ export function useCarouselState({ props, itemsToShow, totalSlides }: UseCarouse
       canGoPrev,
       progress,
       visibleSlideIndices,
+      renderedSlideIndices,
+      virtualOffset,
       goToSlide,
       goNext,
       goPrev,
