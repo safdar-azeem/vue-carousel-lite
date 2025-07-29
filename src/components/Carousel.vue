@@ -22,6 +22,8 @@ const props = withDefaults(defineProps<CarouselProps>(), {
    paginationVisibility: 'always',
    paginationHoverEdgeThreshold: 0.2,
    paginationHoverInitialTimeout: 1000,
+   bufferSize: 5,
+   maxDomElements: 10,
    wheelOptions: () => ({
       threshold: 30,
       velocityThreshold: 10,
@@ -63,7 +65,6 @@ const {
    keyboardComposable,
    visibleSlideIndices,
    renderedSlideIndices,
-   virtualOffset,
 } = carousel
 
 // Pagination visibility composable
@@ -190,7 +191,7 @@ onMounted(() => {
                   :class="`carousel-track ${itemsToShow > 1 ? 'carousel-track-multiple' : ''}`"
                   :style="trackStyle">
                   <div
-                     v-for="(slideData, renderIndex) in slidesData"
+                     v-for="slideData in slidesData"
                      :key="getSlideKey(slideData)"
                      v-memo="[
                         slideData.item,
@@ -201,7 +202,6 @@ onMounted(() => {
                         visibleSlideIndices.includes(slideData.originalIndex),
                         isInitialized,
                      ]"
-                     :data-index="renderIndex"
                      :class="getSlideClasses(slideData.originalIndex)"
                      :aria-hidden="
                         isInitialized ? !visibleSlideIndices.includes(slideData.originalIndex) : false
