@@ -1,6 +1,6 @@
 # Vue Carousel Lite
 
-Vue Carousel – A high-performance lightweight Vue 3 carousel with support for Touch, Mouse, Keyboard, and Wheel input, featuring GPU-accelerated transitions, responsive design, and Nuxt 3 SSR support.
+Vue Carousel – A high-performance lightweight Vue 3 carousel with support for Touch, Mouse, Keyboard, and Wheel input, featuring GPU-accelerated transitions, virtual rendering, responsive design, and Nuxt 3 SSR support.
 
 ## Features
 
@@ -11,6 +11,7 @@ Vue Carousel – A high-performance lightweight Vue 3 carousel with support for 
 -  **Customizable**: Flexible props for direction, autoplay, gap, pagination visibility, and more.
 -  **Touch and Mouse Support**: Drag and mousewheel interactions.
 -  **Nuxt 3 SSR Support**: Server-side rendering for better SEO.
+-  **Virtual Rendering**: Renders only visible slides + buffer for optimal performance with large datasets
 
 ## Demo
 
@@ -253,6 +254,7 @@ const data = [
 | `paginationPosition` | String \| Array  | `'bottom-center'` | Pagination position(s): `center`, `bottom-center`, `bottom-left`, etc.      |
 | `direction`          | String           | `'horizontal'`    | Carousel direction: `horizontal` or `vertical`.                             |
 | `autoPlay`           | Boolean          | `false`           | Enable/disable autoplay.                                                    |
+| `draggable`          | Boolean          | `false`           | Enable/disable dragging.                                                    |
 | `autoPlayInterval`   | Number           | `3000`            | Autoplay interval in milliseconds.                                          |
 | `itemsToShow`        | Number \| Object | `1`               | Number of items to show or an object with breakpoints (e.g., `{ 640: 1 }`). |
 | `gap`                | Number           | `0`               | Gap between slides in pixels.                                               |
@@ -261,6 +263,8 @@ const data = [
 | `mousewheel`         | Boolean          | `true`            | Enable/disable mousewheel navigation.                                       |
 | `loop`               | Boolean          | `false`           | Enable/disable looping of slides.                                           |
 | `currentItem`        | Number           | `0`               | Index of the initial slide.                                                 |
+| `bufferSize`         | Number           | `5`               | Number of slides to buffer on each side for virtual rendering.              |
+| `maxDomElements`     | Number           | `10`              | How many slide elements can exist in the DOM                                |
 
 ## Slots
 
