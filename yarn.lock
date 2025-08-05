@@ -977,11 +977,6 @@ vscode-uri@^3.0.8:
   resolved "https://registry.yarnpkg.com/vscode-uri/-/vscode-uri-3.1.0.tgz#dd09ec5a66a38b5c3fffc774015713496d14e09c"
   integrity sha512-/BpdSx+yCQGnCvecbyXdxHDkuk55/G3xwnC0GqY4gmQ3j+A+g8kzzgB4Nk/SINjqn6+waqw3EgbVF2QKExkRxQ==
 
-vue-carousel-lite@^0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/vue-carousel-lite/-/vue-carousel-lite-0.0.1.tgz#ace8ceac81a331b5450f7eb56fec73129cc75c52"
-  integrity sha512-27LOjretsOY/tvrfUnJkYiRr3Hrs8lJWj+l591qOSARAeGIE+ACJpoEthKPY3Ti3MUbQfY5V4g1z2Avpn8AiiA==
-
 vue-template-compiler@^2.7.14:
   version "2.7.16"
   resolved "https://registry.yarnpkg.com/vue-template-compiler/-/vue-template-compiler-2.7.16.tgz#c81b2d47753264c77ac03b9966a46637482bb03b"
