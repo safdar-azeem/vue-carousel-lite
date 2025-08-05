@@ -113,10 +113,6 @@
    width: fit-content;
    height: 100%;
    contain: layout style;
-
-   /* Font rendering optimization */
-   -webkit-font-smoothing: antialiased;
-   -moz-osx-font-smoothing: grayscale;
 }
 
 /* UPDATED: Use CSS gap for proper spacing */
@@ -197,7 +193,6 @@
 
    /* Font optimization */
    text-rendering: optimizeSpeed;
-   -webkit-font-smoothing: antialiased;
 }
 
 /* ==========================================
