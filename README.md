@@ -17,6 +17,11 @@ Vue Carousel – A high-performance lightweight Vue 3 carousel with support for 
 
 [Live Demo](https://vue-carousel-lite.vercel.app/)
 
+## Used By
+
+-  [Builto Notes](https://notes.builto.com/)
+-  [Builto Canvas](https://canvas.builto.com/)
+
 ## Installation
 
 ```bash
@@ -29,6 +34,8 @@ yarn add vue-carousel-lite
 # pnpm
 pnpm add vue-carousel-lite
 ```
+
+> Don't forget to follow me on [GitHub](https://github.com/safdar-azeem)!
 
 ## Usage
 
@@ -283,6 +290,12 @@ const data = [
 | `goPrev`     | `(smooth?: boolean)`                | Navigate to the previous slide.          |
 | `goNextPage` | `(smooth?: boolean)`                | Navigate to the next page of slides.     |
 | `goPrevPage` | `(smooth?: boolean)`                | Navigate to the previous page of slides. |
+
+# Emits
+
+| Event Name     | Parameters        | Description                             |
+| -------------- | ----------------- | --------------------------------------- |
+| `slide-change` | `(index: number)` | Emitted when the current slide changes. |
 
 ## Styling
 
