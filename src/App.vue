@@ -242,6 +242,7 @@ const toggleAllCode = () => {
                   :items-to-show="itemsToShow"
                   :gap="gap"
                   :speed="speed"
+                  @slide-change="(index) => console.log(index)"
                   :easing="easing"
                   :mousewheel="mousewheel"
                   :loop="loop">
