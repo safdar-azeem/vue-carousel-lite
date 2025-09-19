@@ -35,6 +35,10 @@ const props = withDefaults(defineProps<CarouselProps>(), {
    }),
 })
 
+const emit = defineEmits<{
+   (e: 'slide-change', index: number): void
+}>()
+
 const containerRef = ref<HTMLElement | null>(null)
 
 const { containerCSSVars, containerClass, itemsToShow, slideHeight, slideWidth, isInitialized } =
@@ -169,6 +173,13 @@ watch(
       }
    },
    { flush: 'post' }
+)
+
+watch(
+   () => state.currentIndex,
+   (newIndex) => {
+      emit('slide-change', newIndex)
+   }
 )
 
 onMounted(async () => {
