@@ -124,6 +124,7 @@ export function useCarousel({ props, slideWidth, slideHeight, itemsToShow }: Use
       props,
       state,
       goNext,
+      goToSlide,
       canGoNext,
    })
 
