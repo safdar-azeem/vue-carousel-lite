@@ -24,6 +24,7 @@ const props = withDefaults(defineProps<CarouselProps>(), {
    paginationHoverEdgeThreshold: 0.2,
    paginationHoverInitialTimeout: 1000,
    bufferSize: 5,
+   autoFocus: false,
    maxDomElements: 10,
    wheelOptions: () => ({
       threshold: 30,
@@ -185,9 +186,11 @@ watch(
 onMounted(async () => {
    isInitialMount = false
    await nextTick()
-   setTimeout(() => {
-      carouselContainer.value?.focus()
-   }, 500)
+   if (props?.autoFocus) {
+      setTimeout(() => {
+         carouselContainer.value?.focus()
+      }, 500)
+   }
 })
 </script>
 
