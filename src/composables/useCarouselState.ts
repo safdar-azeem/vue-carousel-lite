@@ -127,9 +127,6 @@ export function useCarouselState({ props, itemsToShow, totalSlides }: UseCarouse
          start = end - WINDOW_SIZE + 1
       }
 
-      console.log('idealStart :>> ', start)
-      console.log('idealEnd :>> ', end)
-
       return { start, end }
    }
 
