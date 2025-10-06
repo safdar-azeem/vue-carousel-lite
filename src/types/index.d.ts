@@ -32,8 +32,9 @@ export interface CarouselProps {
    autoPlay?: boolean
    draggable?: boolean
    mousewheel?: boolean
-   currentItem?: number
+   autoFocus?: boolean
    autoPlayInterval?: number
+   currentItem?: number
    paginationBackground?: boolean
    paginationSize?: 'sm' | 'md' | 'lg'
    itemsToShow?: number | SlidesPerView
@@ -79,13 +80,6 @@ export interface DragState {
    currentX: number
    currentY: number
    startTime: number
-}
-
-export interface AutoplayOptions {
-   interval?: number
-   stopOnEnd?: boolean
-   pauseOnHover?: boolean
-   pauseOnInteraction?: boolean
 }
 
 // Event interfaces
