@@ -5,10 +5,11 @@ interface UseAutoplayOptions {
    props: CarouselProps
    state: CarouselState
    goNext: () => void
+   goToSlide: (index: number, smooth?: boolean) => void
    canGoNext: ComputedRef<boolean>
 }
 
-export function useAutoplay({ props, state, goNext, canGoNext }: UseAutoplayOptions) {
+export function useAutoplay({ props, state, goNext, goToSlide, canGoNext }: UseAutoplayOptions) {
    const autoplayTimer = ref<NodeJS.Timeout | null>(null)
    const isAutoplayPaused = ref(false)
    const isAutoplayActive = ref(false)
@@ -35,6 +36,8 @@ export function useAutoplay({ props, state, goNext, canGoNext }: UseAutoplayOpti
 
          if (canGoNext.value) {
             goNext()
+         } else if (props.loop) {
+            goToSlide(0)
          } else {
             // Stop at the end (no looping)
             stopAutoplay()
