@@ -8,11 +8,11 @@ import { computed, nextTick, onBeforeMount, onMounted, readonly, ref, watch } fr
 
 const props = withDefaults(defineProps<CarouselProps>(), {
    gap: 0,
-   speed: 300,
+   speed: 200,
    loop: false,
    itemsToShow: 1,
    currentItem: 0,
-   easing: 'ease',
+   easing: 'ease-out',
    autoPlay: false,
    mousewheel: true,
    draggable: true,
@@ -27,10 +27,10 @@ const props = withDefaults(defineProps<CarouselProps>(), {
    autoFocus: false,
    maxDomElements: 10,
    wheelOptions: () => ({
-      threshold: 30,
-      velocityThreshold: 10,
-      pageScrollThreshold: 100,
-      debounceTime: 10,
+      threshold: 10,
+      velocityThreshold: 8,
+      pageScrollThreshold: 80,
+      debounceTime: 5,
       preventDefault: true,
       stopPropagation: true,
    }),
