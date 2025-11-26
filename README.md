@@ -19,6 +19,7 @@ Vue Carousel – A high-performance lightweight Vue 3 carousel with support for 
 
 ## Used By
 
+-  [Builto](https://builto.com/template/bloom)
 -  [Builto Notes](https://notes.builto.com/)
 -  [Builto Canvas](https://canvas.builto.com/)
 
