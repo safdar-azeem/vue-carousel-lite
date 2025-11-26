@@ -89,10 +89,8 @@
    /* === ANIMATION & TRANSITIONS === */
    --carousel-pagination-transition-duration: 0.3s;
    --carousel-pagination-transition-timing: ease;
-   --carousel-pagination-transition: all var(--carousel-pagination-transition-duration)
-      var(--carousel-pagination-transition-timing);
-   --carousel-pagination-progressbar-transition: width var(--carousel-pagination-transition-duration)
-      var(--carousel-pagination-transition-timing);
+   --carousel-pagination-transition: all var(--carousel-pagination-transition-duration) var(--carousel-pagination-transition-timing);
+   --carousel-pagination-progressbar-transition: width var(--carousel-pagination-transition-duration) var(--carousel-pagination-transition-timing);
 }
 
 .carousel-pagination--sm {
@@ -130,8 +128,7 @@
    gap: var(--carousel-pagination-gap);
    padding: var(--carousel-pagination-padding);
    z-index: var(--carousel-pagination-z-index);
-   transition: opacity var(--carousel-pagination-transition-duration)
-      var(--carousel-pagination-transition-timing);
+   transition: opacity var(--carousel-pagination-transition-duration) var(--carousel-pagination-transition-timing);
 }
 
 /* ==========================================
@@ -154,6 +151,10 @@
    top: 50%;
    right: var(--carousel-pagination-side-offset);
    transform: translate(50%, -50%);
+}
+
+.carousel-pagination--bottom {
+   margin-top: 8px;
 }
 
 .carousel-pagination--bottom-center {
@@ -212,8 +213,7 @@
 }
 
 .carousel-pagination--vertical .carousel-pagination-button {
-   transform: rotate(var(--carousel-pagination-button-rotation))
-      scale(var(--carousel-pagination-button-scale));
+   transform: rotate(var(--carousel-pagination-button-rotation)) scale(var(--carousel-pagination-button-scale));
 }
 
 /* ==========================================
@@ -314,8 +314,7 @@
    justify-content: center;
    width: var(--carousel-pagination-button-size);
    height: var(--carousel-pagination-button-size);
-   border: var(--carousel-pagination-button-border-width) solid
-      var(--carousel-pagination-button-border-color);
+   border: var(--carousel-pagination-button-border-width) solid var(--carousel-pagination-button-border-color);
    background-color: var(--carousel-pagination-button-bg);
    border-radius: 50%;
    cursor: pointer;
@@ -343,8 +342,7 @@
 .carousel-pagination-button svg {
    width: var(--carousel-pagination-button-icon-size);
    height: var(--carousel-pagination-button-icon-size);
-   transition: transform var(--carousel-pagination-transition-duration)
-      var(--carousel-pagination-transition-timing);
+   transition: transform var(--carousel-pagination-transition-duration) var(--carousel-pagination-transition-timing);
 }
 
 /* ==========================================
@@ -355,8 +353,7 @@
    display: flex;
    align-items: center;
    gap: var(--carousel-pagination-fraction-gap);
-   border: var(--carousel-pagination-button-border-width) solid
-      var(--carousel-pagination-fraction-border-color);
+   border: var(--carousel-pagination-button-border-width) solid var(--carousel-pagination-fraction-border-color);
    background-color: var(--carousel-pagination-fraction-bg);
    color: var(--carousel-pagination-text-color);
    padding: var(--carousel-pagination-fraction-padding);
@@ -423,6 +420,7 @@
    ========================================== */
 
 @media (prefers-reduced-motion: reduce) {
+
    .carousel-pagination-dot,
    .carousel-pagination-line,
    .carousel-pagination-button,
@@ -467,6 +465,7 @@
    ========================================== */
 
 @media (prefers-contrast: high) {
+
    .carousel-pagination-dot,
    .carousel-pagination-line,
    .carousel-pagination-button {
