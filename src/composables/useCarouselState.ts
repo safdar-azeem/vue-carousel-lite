@@ -91,16 +91,46 @@ export function useCarouselState({ props, itemsToShow, totalSlides }: UseCarouse
    })
 
    // Performance-optimized visible slide indices calculation
+   // CRITICAL FIX: Added explicit integer conversion to prevent RangeError with fractional itemsToShow
    const visibleSlideIndices = computed(() => {
       const indices: number[] = []
-      const start = state.currentIndex
-      const end = Math.min(start + itemsToShow.value, totalSlides.value)
+      const total = totalSlides.value
+      const current = state.currentIndex
+      const itemsCount = itemsToShow.value
+
+      if (total === 0) return indices
+
+      // Sanitize start index against current total slides to prevent negative bounds
+      // caused by state updates lagging behind prop updates
+      const start = Math.max(0, Math.min(current, total - 1))
+
+      // Calculate end based on start + items count, capped at total
+      // Using floating point math here is fine, we resolve it later
+      const end = Math.min(start + itemsCount, total)
+
+      // Calculate how many items to iterate
+      // Math.ceil is crucial here because if itemsToShow is 1.5, the loop i < end runs for 0 and 1 (2 items)
+      // indices.length must be an integer.
+      const rawLength = end - start
+
+      // Ensure length is a valid positive integer
+      // 1. Math.ceil handles fractional itemsToShow (e.g. 2.5 -> 3 visible slides)
+      // 2. Math.max(0, ...) ensures we never have negative length
+      const length = Math.max(0, Math.ceil(rawLength))
+
+      // Final safety check: ensure length is finite before setting array length
+      if (!Number.isFinite(length)) return indices
 
       // Pre-allocate array for better performance
-      indices.length = end - start
+      try {
+         indices.length = length
+      } catch (e) {
+         // Fallback for extreme edge cases (should not be reached with above checks)
+         return []
+      }
 
-      for (let i = start; i < end; i++) {
-         indices[i - start] = i
+      for (let i = 0; i < length; i++) {
+         indices[i] = start + i
       }
 
       return indices
