@@ -239,23 +239,10 @@ export function useCarouselState({ props, itemsToShow, totalSlides }: UseCarouse
 
    // FIXED: Slide navigation with deferred window updates
    const goToSlide = (index: number, smooth = true) => {
-      console.log('[goToSlide] Called with index:', index, 'smooth:', smooth)
-      console.log('[goToSlide] state.isTransitioning:', state.isTransitioning)
-      console.log('[goToSlide] maxIndex:', maxIndex.value)
-
-      if (state.isTransitioning && smooth) {
-         console.log('[goToSlide] BLOCKED - already transitioning')
-         return
-      }
+      if (state.isTransitioning && smooth) return
 
       const targetIndex = Math.max(0, Math.min(index, maxIndex.value))
-      console.log('[goToSlide] targetIndex (clamped):', targetIndex)
-      console.log('[goToSlide] state.currentIndex:', state.currentIndex)
-
-      if (targetIndex === state.currentIndex) {
-         console.log('[goToSlide] SKIPPED - already at target index')
-         return
-      }
+      if (targetIndex === state.currentIndex) return
 
       // Check if we need a window update, but don't apply it yet
       const needsWindowUpdate = shouldUpdateRenderWindow(targetIndex)
@@ -265,17 +252,14 @@ export function useCarouselState({ props, itemsToShow, totalSlides }: UseCarouse
       }
 
       // Update current index immediately
-      console.log('[goToSlide] NAVIGATING: currentIndex', state.currentIndex, '->', targetIndex)
       state.currentIndex = targetIndex
 
       // Handle transition
       if (smooth) {
          state.isTransitioning = true
-         console.log('[goToSlide] Transition started, will complete in', props.speed || 300, 'ms')
 
          setTimeout(() => {
             state.isTransitioning = false
-            console.log('[goToSlide] Transition completed, currentIndex:', state.currentIndex)
             // Apply window update after transition completes
             applyPendingWindowUpdate()
          }, props.speed || 300)
@@ -287,50 +271,24 @@ export function useCarouselState({ props, itemsToShow, totalSlides }: UseCarouse
 
    // Optimized navigation methods with boundary checks
    const goNext = (smooth = true) => {
-      console.log('[goNext] Called with smooth:', smooth)
-      console.log('[goNext] canGoNext:', canGoNext.value, 'isTransitioning:', state.isTransitioning)
-      if (!canGoNext.value || state.isTransitioning) {
-         console.log('[goNext] BLOCKED - canGoNext or isTransitioning check failed')
-         return
-      }
-      console.log('[goNext] Navigating from', state.currentIndex, 'to', state.currentIndex + 1)
+      if (!canGoNext.value || state.isTransitioning) return
       goToSlide(state.currentIndex + 1, smooth)
    }
 
    const goPrev = (smooth = true) => {
-      console.log('[goPrev] Called with smooth:', smooth)
-      console.log('[goPrev] canGoPrev:', canGoPrev.value, 'isTransitioning:', state.isTransitioning)
-      if (!canGoPrev.value || state.isTransitioning) {
-         console.log('[goPrev] BLOCKED - canGoPrev or isTransitioning check failed')
-         return
-      }
-      console.log('[goPrev] Navigating from', state.currentIndex, 'to', state.currentIndex - 1)
+      if (!canGoPrev.value || state.isTransitioning) return
       goToSlide(state.currentIndex - 1, smooth)
    }
 
    const goNextPage = (smooth = true) => {
-      console.log('[goNextPage] Called with smooth:', smooth)
-      console.log('[goNextPage] canGoNext:', canGoNext.value, 'isTransitioning:', state.isTransitioning)
-      console.log('[goNextPage] itemsToShow:', itemsToShow.value)
-      if (!canGoNext.value || state.isTransitioning) {
-         console.log('[goNextPage] BLOCKED - canGoNext or isTransitioning check failed')
-         return
-      }
+      if (!canGoNext.value || state.isTransitioning) return
       const nextIndex = Math.min(state.currentIndex + itemsToShow.value, maxIndex.value)
-      console.log('[goNextPage] Navigating from', state.currentIndex, 'to', nextIndex, '(maxIndex:', maxIndex.value, ')')
       goToSlide(nextIndex, smooth)
    }
 
    const goPrevPage = (smooth = true) => {
-      console.log('[goPrevPage] Called with smooth:', smooth)
-      console.log('[goPrevPage] canGoPrev:', canGoPrev.value, 'isTransitioning:', state.isTransitioning)
-      console.log('[goPrevPage] itemsToShow:', itemsToShow.value)
-      if (!canGoPrev.value || state.isTransitioning) {
-         console.log('[goPrevPage] BLOCKED - canGoPrev or isTransitioning check failed')
-         return
-      }
+      if (!canGoPrev.value || state.isTransitioning) return
       const prevIndex = Math.max(state.currentIndex - itemsToShow.value, 0)
-      console.log('[goPrevPage] Navigating from', state.currentIndex, 'to', prevIndex)
       goToSlide(prevIndex, smooth)
    }
 
