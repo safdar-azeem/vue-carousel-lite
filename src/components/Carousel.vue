@@ -31,9 +31,12 @@ const props = withDefaults(defineProps<CarouselProps>(), {
       velocityThreshold: 8,
       pageScrollThreshold: 80,
       debounceTime: 5,
+      scrollByPage: false,
+      lockDuringTransition: true,
       preventDefault: true,
       stopPropagation: true,
    }),
+   updateKey: undefined,
 })
 
 const emit = defineEmits<{
@@ -223,6 +226,7 @@ onMounted(async () => {
                         itemsToShow,
                         visibleSlideIndices.includes(slideData.originalIndex),
                         isInitialized,
+                        props.updateKey,
                      ]"
                      :class="getSlideClasses(slideData.originalIndex)"
                      :aria-hidden="

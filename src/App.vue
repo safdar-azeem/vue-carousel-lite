@@ -11,6 +11,10 @@ const data: string[] = [
    'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=450&fit=crop',
    'https://images.unsplash.com/photo-1568206222579-3d32da70596b?w=800&h=450&fit=crop',
    'https://images.unsplash.com/photo-1477840539360-4a1d23071046?w=800&h=450&fit=crop',
+   'https://images.unsplash.com/photo-1682687220063-4742bd7fd538?w=800&h=450&fit=crop',
+   'https://images.unsplash.com/photo-1682687220198-88e9bdea9931?w=800&h=450&fit=crop',
+   'https://images.unsplash.com/photo-1682687220067-dced9a881b56?w=800&h=450&fit=crop',
+   'https://images.unsplash.com/photo-1682687220509-61b8a906ca19?w=800&h=450&fit=crop',
 ]
 
 // Reactive carousel properties
@@ -19,13 +23,15 @@ const paginationSize = ref<'sm' | 'md' | 'lg'>('md')
 const paginationPosition = ref<PaginationPosition | PaginationPosition[]>('bottom-center')
 const direction = ref<'horizontal' | 'vertical'>('horizontal')
 const autoPlay = ref<boolean>(false)
-const itemsToShow = ref<number>(1)
-const gap = ref<number>(0)
+const itemsToShow = ref<number>(3)
+const gap = ref<number>(10)
 const speed = ref<number>(400)
 const easing = ref<string>('ease')
 const mousewheel = ref<boolean>(true)
 const loop = ref<boolean>(false)
 const autoPlayInterval = ref<number>(3000)
+// New reactive property for wheel behavior
+const scrollByPage = ref<boolean>(false)
 
 const paginationOptions: (PaginationType | 'false')[] = ['buttons', 'dots', 'lines', 'fraction', 'false']
 const paginationSizeOptions = ['sm', 'md', 'lg']
@@ -48,6 +54,12 @@ const activeTab = ref<'playground' | 'examples'>('playground')
 
 const showCode = ref<{ [key: number]: boolean }>({})
 
+// Compute wheel options object to pass to Carousel
+const wheelOptions = computed(() => ({
+   scrollByPage: scrollByPage.value,
+   threshold: 10, // Maintain default threshold
+}))
+
 const carouselKey = computed(() => {
    return [
       pagination.value,
@@ -62,6 +74,7 @@ const carouselKey = computed(() => {
       mousewheel.value,
       loop.value,
       autoPlayInterval.value,
+      scrollByPage.value, // Add key to force refresh if needed, though prop update should be enough
    ].join('-')
 })
 
@@ -75,7 +88,6 @@ const toggleAllCode = () => {
 
 <template>
    <div class="container">
-      <!-- Header -->
       <div class="header">
          <h1>Vue Carousel Lite</h1>
          <p class="subtitle">
@@ -83,7 +95,6 @@ const toggleAllCode = () => {
          </p>
       </div>
 
-      <!-- Tabs -->
       <div class="tabs">
          <button :class="{ active: activeTab === 'playground' }" @click="activeTab = 'playground'">
             🎮 Playground
@@ -93,7 +104,6 @@ const toggleAllCode = () => {
          </button>
       </div>
 
-      <!-- Playground Tab -->
       <div v-if="activeTab === 'playground'" class="playground-tab">
          <div class="controls">
             <div class="controls-header">
@@ -101,7 +111,6 @@ const toggleAllCode = () => {
             </div>
 
             <div class="controls-grid">
-               <!-- Basic Settings -->
                <div class="control-section">
                   <h3>📐 Layout</h3>
                   <div class="control-group">
@@ -130,7 +139,6 @@ const toggleAllCode = () => {
                   </div>
                </div>
 
-               <!-- Pagination Settings -->
                <div class="control-section">
                   <h3>🔘 Pagination</h3>
                   <div class="control-group">
@@ -159,7 +167,6 @@ const toggleAllCode = () => {
                   </div>
                </div>
 
-               <!-- Animation Settings -->
                <div class="control-section">
                   <h3>⚡ Animation</h3>
                   <div class="control-group">
@@ -180,7 +187,6 @@ const toggleAllCode = () => {
                   </div>
                </div>
 
-               <!-- Behavior Settings -->
                <div class="control-section">
                   <h3>⚙️ Behavior</h3>
                   <div class="control-group">
@@ -208,6 +214,13 @@ const toggleAllCode = () => {
                         Mousewheel Navigation
                      </label>
                   </div>
+                  <div class="control-group" v-if="mousewheel">
+                     <label class="checkbox-label">
+                        <input type="checkbox" v-model="scrollByPage" />
+                        <span class="checkmark"></span>
+                        Scroll By Page (Wheel)
+                     </label>
+                  </div>
                   <div class="control-group">
                      <label class="checkbox-label">
                         <input type="checkbox" v-model="loop" />
@@ -225,7 +238,7 @@ const toggleAllCode = () => {
                <div class="preview-stats">
                   <span class="stat">Direction: {{ direction }}</span>
                   <span class="stat">Items: {{ itemsToShow }}</span>
-                  <span class="stat">Gap: {{ gap }}px</span>
+                  <span class="stat">Mode: {{ scrollByPage ? 'Page' : 'Item' }}</span>
                </div>
             </div>
             <div class="carousel-containr">
@@ -245,6 +258,7 @@ const toggleAllCode = () => {
                   @slide-change="(index) => console.log(index)"
                   :easing="easing"
                   :mousewheel="mousewheel"
+                  :wheel-options="wheelOptions"
                   :loop="loop">
                   <template #default="{ item }">
                      <div class="carousel-slide">
@@ -256,7 +270,6 @@ const toggleAllCode = () => {
          </div>
       </div>
 
-      <!-- Examples Tab -->
       <div v-if="activeTab === 'examples'" class="examples-tab">
          <div class="examples-header">
             <h2>Usage Examples</h2>

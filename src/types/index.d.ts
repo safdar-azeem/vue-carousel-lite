@@ -21,6 +21,10 @@ export interface WheelOptions {
    velocityThreshold?: number
    pageScrollThreshold?: number
    debounceTime?: number
+   scrollByPage?: boolean
+   lockDuringTransition?: boolean
+   preventDefault?: boolean // Added
+   stopPropagation?: boolean // Added
 }
 
 export interface CarouselProps {
@@ -47,6 +51,7 @@ export interface CarouselProps {
    wheelOptions?: WheelOptions
    bufferSize?: number
    maxDomElements?: number
+   updateKey?: string | number
 }
 
 export interface CarouselState {
