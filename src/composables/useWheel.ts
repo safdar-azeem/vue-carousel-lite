@@ -36,7 +36,7 @@ export function useWheel({
    // Gesture accumulation for smooth 60fps handling
    let accumulatedDelta = 0
    let lastWheelTime = 0
-   const GESTURE_TIMEOUT = 100 // ms to consider wheel events as same gesture
+   const GESTURE_TIMEOUT = 50 // ms to consider wheel events as same gesture
 
    // Reactive wheel options to handle dynamic config changes
    const options = computed(() => ({
