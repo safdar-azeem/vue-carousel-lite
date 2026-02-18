@@ -11,6 +11,9 @@ export default defineConfig({
       tsconfigPath: './tsconfig.app.json',
       insertTypesEntry: true,
       exclude: ['src/App.vue', 'src/main.ts', 'src/examples.ts', 'src/vite-env.d.ts'],
+      entryRoot: 'src',
+      copyDtsFiles: true,
+      cleanVueFileName: true,
     }),
   ],
   resolve: {
@@ -21,15 +24,19 @@ export default defineConfig({
   build: {
     lib: {
       entry: path.resolve(__dirname, 'src/index.ts'),
-      name: 'VueCarouselLite',
+      name: 'vue-carousel-lite',
       fileName: 'index',
       formats: ['es'],
     },
     rollupOptions: {
-      // Externalize deps that should not be bundled
-      external: ['vue'],
+      external: (id) => {
+        const externals = ['vue']
+        return externals.some((ext) => id === ext || id.startsWith(ext + '/'))
+      },
       output: {
-        preserveModules: false,
+        preserveModules: true,
+        preserveModulesRoot: 'src',
+        entryFileNames: '[name].js',
         exports: 'named',
         assetFileNames: 'style.[ext]',
         globals: {
