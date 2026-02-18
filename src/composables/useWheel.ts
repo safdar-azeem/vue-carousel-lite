@@ -26,6 +26,7 @@ export function useWheel({
    canGoPrev,
 }: UseWheelOptions) {
    const isWheeling = ref(false)
+   const wheelLock = ref(false)
    let wheelTimeout: NodeJS.Timeout | null = null
 
    const wheelOptions = {
@@ -42,10 +43,40 @@ export function useWheel({
       isWheeling.value = false
    }, wheelOptions.debounceTime || 10)
 
+   // Release lock after 250ms of no wheel events (handles trackpad inertia)
+   const releaseWheelLock = debounce(() => {
+      wheelLock.value = false
+   }, 50)
+
    const handleWheel = (e: WheelEvent) => {
       if (!props.mousewheel || state.isDragging) return
 
       const isHorizontal = props.direction === 'horizontal'
+
+      // Intent detection:
+      // If the user is scrolling vertically on a horizontal carousel, do not lock or slide.
+      // This allows natural vertical page scrolling.
+      if (isHorizontal && Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+         return
+      }
+      if (!isHorizontal && Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+         return
+      }
+
+      // Lock detection:
+      // Ignore further wheel events until transition is done AND wheel inertia stops
+      if (state.isTransitioning || wheelLock.value) {
+         if (wheelOptions.preventDefault) {
+            e.preventDefault()
+         }
+         if (wheelOptions.stopPropagation) {
+            e.stopPropagation()
+         }
+         // Keep extending the lock if user is still spinning the wheel
+         releaseWheelLock()
+         return
+      }
+
       const primaryDelta = isHorizontal ? e.deltaX : e.deltaY
       const absPrimaryDelta = Math.abs(primaryDelta)
 
@@ -56,7 +87,7 @@ export function useWheel({
       const isScrollingToPrevFromFirst = verticalDelta < 0 && isAtFirstSlide
       const isScrollingToNextFromLast = verticalDelta > 0 && isAtLastSlide
 
-      if ((isScrollingToPrevFromFirst || isScrollingToNextFromLast) && props.direction === 'vertical') {
+      if ((isScrollingToPrevFromFirst || isScrollingToNextFromLast) && !isHorizontal) {
          return
       }
 
@@ -77,6 +108,10 @@ export function useWheel({
             clearTimeout(wheelTimeout)
          }
 
+         // Apply the lock so subsequent fast events during this physical flick are ignored
+         wheelLock.value = true
+         releaseWheelLock()
+
          state.isWheeling = true
          isWheeling.value = true
 
@@ -84,19 +119,13 @@ export function useWheel({
 
          if (primaryDelta > wheelOptions.velocityThreshold) {
             if (canGoNext.value) {
-               if (isPageScroll) {
-                  goNextPage()
-               } else {
-                  goNext()
-               }
+               if (isPageScroll) goNextPage()
+               else goNext()
             }
          } else if (primaryDelta < -wheelOptions.velocityThreshold) {
             if (canGoPrev.value) {
-               if (isPageScroll) {
-                  goPrevPage()
-               } else {
-                  goPrev()
-               }
+               if (isPageScroll) goPrevPage()
+               else goPrev()
             }
          }
 
