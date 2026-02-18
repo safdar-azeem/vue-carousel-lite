@@ -75,7 +75,6 @@ const toggleAllCode = () => {
 
 <template>
    <div class="container">
-      <!-- Header -->
       <div class="header">
          <h1>Vue Carousel Lite</h1>
          <p class="subtitle">
@@ -83,7 +82,6 @@ const toggleAllCode = () => {
          </p>
       </div>
 
-      <!-- Tabs -->
       <div class="tabs">
          <button :class="{ active: activeTab === 'playground' }" @click="activeTab = 'playground'">
             🎮 Playground
@@ -93,7 +91,6 @@ const toggleAllCode = () => {
          </button>
       </div>
 
-      <!-- Playground Tab -->
       <div v-if="activeTab === 'playground'" class="playground-tab">
          <div class="controls">
             <div class="controls-header">
@@ -101,7 +98,6 @@ const toggleAllCode = () => {
             </div>
 
             <div class="controls-grid">
-               <!-- Basic Settings -->
                <div class="control-section">
                   <h3>📐 Layout</h3>
                   <div class="control-group">
@@ -130,7 +126,6 @@ const toggleAllCode = () => {
                   </div>
                </div>
 
-               <!-- Pagination Settings -->
                <div class="control-section">
                   <h3>🔘 Pagination</h3>
                   <div class="control-group">
@@ -159,7 +154,6 @@ const toggleAllCode = () => {
                   </div>
                </div>
 
-               <!-- Animation Settings -->
                <div class="control-section">
                   <h3>⚡ Animation</h3>
                   <div class="control-group">
@@ -180,7 +174,6 @@ const toggleAllCode = () => {
                   </div>
                </div>
 
-               <!-- Behavior Settings -->
                <div class="control-section">
                   <h3>⚙️ Behavior</h3>
                   <div class="control-group">
@@ -256,7 +249,6 @@ const toggleAllCode = () => {
          </div>
       </div>
 
-      <!-- Examples Tab -->
       <div v-if="activeTab === 'examples'" class="examples-tab">
          <div class="examples-header">
             <h2>Usage Examples</h2>
@@ -288,9 +280,13 @@ const toggleAllCode = () => {
                   <pre><code>{{ example.code }}</code></pre>
                </div>
                <div v-else class="example-preview">
-                  <Carousel :data="data" v-bind="example.config">
+                  <Carousel :data="example.customData || data" v-bind="example.config">
                      <template #default="{ item }">
-                        <div class="carousel-slide">
+                        <div v-if="example.customData" class="note-card">
+                           <h3>{{ item.title }}</h3>
+                           <p>{{ item.content }}</p>
+                        </div>
+                        <div v-else class="carousel-slide">
                            <img :src="item" class="carousel-image" />
                            <div class="slide-overlay">
                               <h4>{{ example.title }}</h4>
@@ -785,6 +781,52 @@ body {
 .carousel-image {
    width: 100%;
    object-fit: cover;
+}
+
+/* Note Card Styles */
+.note-card {
+   height: 350px;
+   overflow-y: auto;
+   padding: 1.5rem;
+   background: white;
+   border-radius: 1rem;
+   color: #2d3748;
+   width: 100%;
+   text-align: left;
+   box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+   border: 1px solid #e2e8f0;
+   overscroll-behavior: contain;
+}
+
+.note-card h3 {
+   margin: 0 0 1rem 0;
+   padding-bottom: 0.5rem;
+   border-bottom: 1px solid #e2e8f0;
+   font-size: 1.25rem;
+   color: #1a202c;
+   position: sticky;
+   top: 0;
+   background: white;
+   z-index: 10;
+}
+
+.note-card p {
+   margin: 0;
+   white-space: pre-wrap;
+   line-height: 1.6;
+   font-size: 0.95rem;
+   color: #4a5568;
+}
+
+.note-card::-webkit-scrollbar {
+   width: 6px;
+}
+.note-card::-webkit-scrollbar-track {
+   background: transparent;
+}
+.note-card::-webkit-scrollbar-thumb {
+   background-color: #cbd5e0;
+   border-radius: 10px;
 }
 
 /* Responsive Design */
