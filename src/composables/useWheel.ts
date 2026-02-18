@@ -52,21 +52,22 @@ export function useWheel({
       if (!props.mousewheel || state.isDragging) return
 
       const isHorizontal = props.direction === 'horizontal'
+      const absX = Math.abs(e.deltaX)
+      const absY = Math.abs(e.deltaY)
 
-      // Intent detection:
-      // If the user is scrolling vertically on a horizontal carousel, do not lock or slide.
-      // This allows natural vertical page scrolling.
-      if (isHorizontal && Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+      // CRITICAL FIX: Stricter intent detection
+      // Compare absolute values directly to allow native page scroll
+      if (isHorizontal && absY > absX) {
          return
       }
-      if (!isHorizontal && Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+      if (!isHorizontal && absX > absY) {
          return
       }
 
       // Lock detection:
       // Ignore further wheel events until transition is done AND wheel inertia stops
       if (state.isTransitioning || wheelLock.value) {
-         if (wheelOptions.preventDefault) {
+         if (wheelOptions.preventDefault && e.cancelable) {
             e.preventDefault()
          }
          if (wheelOptions.stopPropagation) {
@@ -92,7 +93,7 @@ export function useWheel({
       }
 
       if (absPrimaryDelta >= 1) {
-         if (wheelOptions.preventDefault) {
+         if (wheelOptions.preventDefault && e.cancelable) {
             e.preventDefault()
          }
          if (wheelOptions.stopPropagation) {
