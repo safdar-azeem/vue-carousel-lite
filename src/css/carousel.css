@@ -73,13 +73,11 @@
 /* Optimized touch-action for better scrolling performance */
 .carousel--vertical .carousel-container {
    touch-action: pan-x;
-   overscroll-behavior: contain;
    -webkit-overflow-scrolling: touch;
 }
 
 .carousel--horizontal .carousel-container {
    touch-action: pan-y;
-   overscroll-behavior: contain;
    -webkit-overflow-scrolling: touch;
 }
 
