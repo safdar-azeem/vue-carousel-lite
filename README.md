@@ -4,14 +4,15 @@ Vue Carousel – A high-performance lightweight Vue 3 carousel with support for 
 
 ## Features
 
--  **Responsive Design**: Supports breakpoints for different screen sizes.
--  **Multiple Pagination Types**: Includes buttons, dots, lines, and fraction pagination.
--  **Accessibility**: Keyboard navigation, ARIA attributes, and focus management.
--  **Performance Optimized**: Uses GPU acceleration, memoization, and SSR-friendly rendering.
--  **Customizable**: Flexible props for direction, autoplay, gap, pagination visibility, and more.
--  **Touch and Mouse Support**: Drag and mousewheel interactions.
--  **Nuxt 3 SSR Support**: Server-side rendering for better SEO.
--  **Virtual Rendering**: Renders only visible slides + buffer for optimal performance with large datasets
+- **Responsive Design**: Supports breakpoints for different screen sizes.
+- **Multiple Pagination Types**: Includes buttons, dots, lines, and fraction pagination.
+- **Accessibility**: Keyboard navigation, ARIA attributes, and focus management.
+- **Performance Optimized**: Uses GPU acceleration, memoization, and SSR-friendly rendering.
+- **Customizable**: Flexible props for direction, autoplay, gap, pagination visibility, and more.
+- **Touch and Mouse Support**: Drag and mousewheel interactions.
+- **Nuxt 3 SSR Support**: Server-side rendering for better SEO.
+- **Virtual Rendering**: Renders only visible slides + buffer for optimal performance with large datasets
+- **State Synchronization**: Robust updates for dynamic content via `updateKey`.
 
 ## Demo
 
@@ -19,9 +20,9 @@ Vue Carousel – A high-performance lightweight Vue 3 carousel with support for 
 
 ## Used By
 
--  [Builto](https://builto.com/template/bloom)
--  [Builto Notes](https://notes.builto.com/)
--  [Builto Canvas](https://canvas.builto.com/)
+- [Builto](https://builto.com/template/bloom)
+- [Builto Notes](https://notes.builto.com/)
+- [Builto Canvas](https://canvas.builto.com/)
 
 ## Installation
 
@@ -252,27 +253,58 @@ const data = [
 </template>
 ```
 
+### 6. Managing Dynamic Updates (Critical)
+
+**Important:** Because this carousel uses virtual rendering, items inside the slots are memoized for performance. If you have interactive content inside slides (like selection states, input fields, or toggles) that depends on external state, you **must** use the `updateKey` prop.
+
+Changing the `updateKey` tells the carousel that the **content** of the slides has changed, even if the `data` array itself hasn't, forcing a refresh of the visible slides.
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const currentSelection = ref(null)
+
+// When currentSelection changes, passing it to update-key ensures
+// the correct 'selected' class is applied immediately to the visible slides.
+</script>
+
+<template>
+   <Carousel :data="items" :items-to-show="3" :update-key="currentSelection">
+      <template #default="{ item }">
+         <div
+            class="card"
+            :class="{ 'is-selected': item.id === currentSelection }"
+            @click="currentSelection = item.id">
+            {{ item.title }}
+         </div>
+      </template>
+   </Carousel>
+</template>
+```
+
 ## Props
 
-| Prop                 | Type             | Default           | Description                                                                 |
-| -------------------- | ---------------- | ----------------- | --------------------------------------------------------------------------- |
-| `data`               | Array            | `[]`              | Array of items to display in the carousel.                                  |
-| `pagination`         | String \| Array  | `'dots'`          | Pagination type(s): `buttons`, `dots`, `lines`, `fraction`, or `false`.     |
-| `paginationSize`     | String           | `'md'`            | Pagination size: `sm`, `md`, or `lg`.                                       |
-| `paginationPosition` | String \| Array  | `'bottom-center'` | Pagination position(s): `center`, `bottom-center`, `bottom-left`, etc.      |
-| `direction`          | String           | `'horizontal'`    | Carousel direction: `horizontal` or `vertical`.                             |
-| `autoPlay`           | Boolean          | `false`           | Enable/disable autoplay.                                                    |
-| `draggable`          | Boolean          | `false`           | Enable/disable dragging.                                                    |
-| `autoPlayInterval`   | Number           | `3000`            | Autoplay interval in milliseconds.                                          |
-| `itemsToShow`        | Number \| Object | `1`               | Number of items to show or an object with breakpoints (e.g., `{ 640: 1 }`). |
-| `gap`                | Number           | `0`               | Gap between slides in pixels.                                               |
-| `speed`              | Number           | `300`             | Transition speed in milliseconds.                                           |
-| `easing`             | String           | `'ease'`          | Transition easing function.                                                 |
-| `mousewheel`         | Boolean          | `true`            | Enable/disable mousewheel navigation.                                       |
-| `loop`               | Boolean          | `false`           | Enable/disable looping of slides.                                           |
-| `currentItem`        | Number           | `0`               | Index of the initial slide.                                                 |
-| `bufferSize`         | Number           | `5`               | Number of slides to buffer on each side for virtual rendering.              |
-| `maxDomElements`     | Number           | `10`              | How many slide elements can exist in the DOM                                |
+| Prop                 | Type    | Default        | Description                                                    |
+| -------------------- | ------- | -------------- | -------------------------------------------------------------- |
+| `data`               | Array   | `[]`           | Array of items to display in the carousel.                     |
+| `updateKey`          | String  | Number         | `undefined`                                                    |
+| `pagination`         | String  | Array          | `'dots'`                                                       |
+| `paginationSize`     | String  | `'md'`         | Pagination size: `sm`, `md`, or `lg`.                          |
+| `paginationPosition` | String  | Array          | `'bottom-center'`                                              |
+| `direction`          | String  | `'horizontal'` | Carousel direction: `horizontal` or `vertical`.                |
+| `autoPlay`           | Boolean | `false`        | Enable/disable autoplay.                                       |
+| `draggable`          | Boolean | `false`        | Enable/disable dragging.                                       |
+| `autoPlayInterval`   | Number  | `3000`         | Autoplay interval in milliseconds.                             |
+| `itemsToShow`        | Number  | Object         | `1`                                                            |
+| `gap`                | Number  | `0`            | Gap between slides in pixels.                                  |
+| `speed`              | Number  | `300`          | Transition speed in milliseconds.                              |
+| `easing`             | String  | `'ease'`       | Transition easing function.                                    |
+| `mousewheel`         | Boolean | `true`         | Enable/disable mousewheel navigation.                          |
+| `loop`               | Boolean | `false`        | Enable/disable looping of slides.                              |
+| `currentItem`        | Number  | `0`            | Index of the initial slide.                                    |
+| `bufferSize`         | Number  | `5`            | Number of slides to buffer on each side for virtual rendering. |
+| `maxDomElements`     | Number  | `10`           | How many slide elements can exist in the DOM                   |
 
 ## Slots
 
