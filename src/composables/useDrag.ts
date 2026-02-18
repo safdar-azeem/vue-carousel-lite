@@ -48,7 +48,7 @@ export function useDrag({
 
    const isHorizontal = computed(() => props.direction === 'horizontal')
 
-   // UPDATED: Calculate slide size including gap
+   // Calculate slide size including gap
    const slideSize = computed(() => {
       const gap = props.gap || 0
       if (isHorizontal.value) {
@@ -58,7 +58,8 @@ export function useDrag({
    })
 
    const DRAG_THRESHOLD = 5
-   const DIRECTION_THRESHOLD = 10
+   // CRITICAL FIX: Increased threshold to prevent premature axis locking on high-DPI screens
+   const DIRECTION_THRESHOLD = 15
 
    // Optimized resistance calculation with memoization
    const getResistance = (delta: number): number => {
@@ -117,13 +118,25 @@ export function useDrag({
       trackRef.value.removeAttribute('data-dragging')
    }
 
-   // Optimized direction determination
+   // CRITICAL FIX: Strict direction determination to differentiate scroll vs swipe
    const determineDragDirection = (deltaX: number, deltaY: number): 'horizontal' | 'vertical' | null => {
       const absDeltaX = Math.abs(deltaX)
       const absDeltaY = Math.abs(deltaY)
-      const totalMovement = absDeltaX + absDeltaY // Faster than Math.sqrt
 
-      if (totalMovement < DIRECTION_THRESHOLD) return null
+      // Wait until one of the axes clearly exceeds the threshold before making a decision
+      if (absDeltaX < DIRECTION_THRESHOLD && absDeltaY < DIRECTION_THRESHOLD) {
+         return null
+      }
+
+      // Add a multiplier margin to favor vertical scrolling during messy swipes.
+      // This prevents a user's slightly diagonal vertical thumb swipe from capturing the horizontal slide.
+      if (absDeltaX > absDeltaY * 1.2) {
+         return 'horizontal'
+      } else if (absDeltaY > absDeltaX * 1.2) {
+         return 'vertical'
+      }
+
+      // Fallback for near-perfect diagonal swipes
       return absDeltaX > absDeltaY ? 'horizontal' : 'vertical'
    }
 
@@ -168,7 +181,6 @@ export function useDrag({
       deltaY.value = 0
       startTime.value = performance.now()
 
-      // UPDATED: Calculate initial transform accounting for gaps and virtual offset
       const gap = props.gap || 0
       if (isHorizontal.value) {
          const slideWithGap = slideWidth.value + gap
@@ -211,19 +223,22 @@ export function useDrag({
          }
       }
 
-      const totalMovement = Math.abs(deltaX.value) + Math.abs(deltaY.value) // Faster calculation
+      const totalMovement = Math.abs(deltaX.value) + Math.abs(deltaY.value)
       if (totalMovement > DRAG_THRESHOLD) {
          hasSignificantMovement.value = true
       }
 
       if (isDragDirectionDetermined.value && dragDirection.value === props.direction) {
          if (e) {
-            e.preventDefault()
+            // Check cancelable to safely prevent default and intercept scroll
+            if (e.cancelable) {
+               e.preventDefault()
+            }
             e.stopPropagation()
          }
          updateTrackPosition()
       } else if (isDragDirectionDetermined.value && dragDirection.value !== props.direction) {
-         // Clean exit for wrong direction
+         // Clean exit for wrong direction: gracefully release control so native vertical scrolling continues
          handleEnd()
          return
       }
@@ -243,10 +258,9 @@ export function useDrag({
       if (isDragDirectionDetermined.value && dragDirection.value === props.direction) {
          const delta = isHorizontal.value ? deltaX.value : deltaY.value
          const duration = performance.now() - startTime.value
-         const velocity = Math.abs(delta) / Math.max(duration, 1) // Prevent division by zero
+         const velocity = Math.abs(delta) / Math.max(duration, 1)
 
-         // UPDATED: Use gap-aware slide size for threshold calculation
-         const threshold = slideSize.value * 0.25 // Reduced threshold for better UX
+         const threshold = slideSize.value * 0.25
          const velocityThreshold = 0.3
 
          if (Math.abs(delta) > threshold || velocity > velocityThreshold) {
