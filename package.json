@@ -1,12 +1,14 @@
 {
   "name": "vue-carousel-lite",
-  "version": "0.1.9",
-  "type": "module",
-  "author": "safdar-azeem",
+  "version": "0.2.4",
   "repository": "https://github.com/safdar-azeem/vue-carousel-lite",
   "license": "MIT",
   "description": "Fast, Lightweight Vue Carousel With Touch, Mouse, Keyboard, Wheel & SSR support",
+  "type": "module",
   "main": "index.js",
+  "module": "index.js",
+  "types": "index.d.ts",
+  "author": "safdar-azeem",
   "keywords": [
     "vue3",
     "carousel",
@@ -21,7 +23,13 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
-    "preview": "vite preview"
+    "build:vercel": "vue-tsc -b && vite build --config vite.config.vercel.ts",
+    "preview": "vite preview",
+    "prepare:dist": "npm run build && cp package.json README.md dist/",
+    "release:patch": "npm version patch && npm run prepare:dist && cd dist && npm publish",
+    "release:minor": "npm version minor && npm run prepare:dist && cd dist && npm publish",
+    "release:major": "npm version major && npm run prepare:dist && cd dist && npm publish",
+    "publish:dist": "npm run prepare:dist && cd dist && npm publish"
   },
   "peerDependencies": {
     "vue": "^3.4.31"
