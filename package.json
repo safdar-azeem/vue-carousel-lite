@@ -20,6 +20,14 @@
     "SSR",
     "presentation"
   ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js",
+      "require": "./index.js"
+    },
+    "./style.css": "./style.css"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
