@@ -1,6 +1,6 @@
 {
   "name": "vue-carousel-lite",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "repository": "https://github.com/safdar-azeem/vue-carousel-lite",
   "license": "MIT",
   "description": "Fast, Lightweight Vue Carousel With Touch, Mouse, Keyboard, Wheel & SSR support",
