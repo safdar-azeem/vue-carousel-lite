@@ -11,22 +11,23 @@
       "DOM.Iterable"
     ],
     "skipLibCheck": true,
-    /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "moduleDetection": "force",
-    "emitDeclarationOnly": true, // Changed to true to satisfy allowImportingTsExtensions
+    "noEmit": true,
     "jsx": "preserve",
-    /* Linting */
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    /* Output directory for type declarations */
-    "declaration": true,
-    "declarationDir": "dist1/types"
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    }
   },
   "include": [
     "src/**/*.ts",
@@ -36,6 +37,6 @@
   ],
   "exclude": [
     "node_modules",
-    "dist1"
+    "dist"
   ]
 }
