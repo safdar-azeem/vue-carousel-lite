@@ -223,6 +223,7 @@ onMounted(async () => {
                         itemsToShow,
                         visibleSlideIndices.includes(slideData.originalIndex),
                         isInitialized,
+                        props?.updateKey,
                      ]"
                      :class="getSlideClasses(slideData.originalIndex)"
                      :aria-hidden="
