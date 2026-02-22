@@ -47,6 +47,7 @@ export interface CarouselProps {
    wheelOptions?: WheelOptions
    bufferSize?: number
    maxDomElements?: number
+   updateKey?: string | number
 }
 
 export interface CarouselState {
