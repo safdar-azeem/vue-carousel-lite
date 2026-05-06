@@ -237,10 +237,10 @@ export function useCarouselState({ props, itemsToShow, totalSlides }: UseCarouse
       return renderWindowStart.value
    })
 
+   let transitionTimeout: ReturnType<typeof setTimeout> | null = null
+
    // FIXED: Slide navigation with deferred window updates
    const goToSlide = (index: number, smooth = true) => {
-      if (state.isTransitioning && smooth) return
-
       const targetIndex = Math.max(0, Math.min(index, maxIndex.value))
       if (targetIndex === state.currentIndex) return
 
@@ -258,7 +258,9 @@ export function useCarouselState({ props, itemsToShow, totalSlides }: UseCarouse
       if (smooth) {
          state.isTransitioning = true
 
-         setTimeout(() => {
+         if (transitionTimeout) clearTimeout(transitionTimeout)
+
+         transitionTimeout = setTimeout(() => {
             state.isTransitioning = false
             // Apply window update after transition completes
             applyPendingWindowUpdate()
@@ -271,23 +273,23 @@ export function useCarouselState({ props, itemsToShow, totalSlides }: UseCarouse
 
    // Optimized navigation methods with boundary checks
    const goNext = (smooth = true) => {
-      if (!canGoNext.value || state.isTransitioning || state.isWheeling) return
+      if (!canGoNext.value) return
       goToSlide(state.currentIndex + 1, smooth)
    }
 
    const goPrev = (smooth = true) => {
-      if (!canGoPrev.value || state.isTransitioning || state.isWheeling) return
+      if (!canGoPrev.value) return
       goToSlide(state.currentIndex - 1, smooth)
    }
 
    const goNextPage = (smooth = true) => {
-      if (!canGoNext.value || state.isTransitioning || state.isWheeling) return
+      if (!canGoNext.value) return
       const nextIndex = Math.min(state.currentIndex + itemsToShow.value, maxIndex.value)
       goToSlide(nextIndex, smooth)
    }
 
    const goPrevPage = (smooth = true) => {
-      if (!canGoPrev.value || state.isTransitioning || state.isWheeling) return
+      if (!canGoPrev.value) return
       const prevIndex = Math.max(state.currentIndex - itemsToShow.value, 0)
       goToSlide(prevIndex, smooth)
    }
