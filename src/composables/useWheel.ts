@@ -28,6 +28,7 @@ export function useWheel({
    const isWheeling = ref(false)
    const wheelLock = ref(false)
    let wheelTimeout: NodeJS.Timeout | null = null
+   let lastWheelDirection = 0
 
    const wheelOptions = {
       threshold: props.wheelOptions?.threshold ?? 30,
@@ -64,6 +65,19 @@ export function useWheel({
          return
       }
 
+      const primaryDelta = isHorizontal ? e.deltaX : e.deltaY
+      const absPrimaryDelta = Math.abs(primaryDelta)
+      const currentDirection = Math.sign(primaryDelta)
+
+      // Smart lock break: allow rapid consecutive swipes by detecting direction changes
+      const isDirectionChange = currentDirection !== 0 && lastWheelDirection !== 0 && currentDirection !== lastWheelDirection
+
+      if (wheelLock.value && isDirectionChange) {
+         wheelLock.value = false
+      }
+
+      lastWheelDirection = currentDirection
+
       // Lock detection:
       // Ignore further wheel events until wheel inertia stops
       if (wheelLock.value) {
@@ -77,9 +91,6 @@ export function useWheel({
          releaseWheelLock()
          return
       }
-
-      const primaryDelta = isHorizontal ? e.deltaX : e.deltaY
-      const absPrimaryDelta = Math.abs(primaryDelta)
 
       const isAtFirstSlide = !canGoPrev.value
       const isAtLastSlide = !canGoNext.value
