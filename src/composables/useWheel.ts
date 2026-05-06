@@ -65,8 +65,8 @@ export function useWheel({
       }
 
       // Lock detection:
-      // Ignore further wheel events until transition is done AND wheel inertia stops
-      if (state.isTransitioning || wheelLock.value) {
+      // Ignore further wheel events until wheel inertia stops
+      if (wheelLock.value) {
          if (wheelOptions.preventDefault && e.cancelable) {
             e.preventDefault()
          }
