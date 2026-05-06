@@ -166,7 +166,6 @@ export function useDrag({
    })()
 
    const handleStart = (clientX: number, clientY: number) => {
-      if (state.isTransitioning) return
 
       isDragging.value = true
       hasSignificantMovement.value = false
