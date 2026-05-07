@@ -160,6 +160,10 @@ export function useKeyboard({
       // Set initial focus styles
       container.style.outline = 'none'
       container.style.cursor = 'pointer'
+
+      // Automatically focus the container so keyboard navigation works immediately
+      // Use preventScroll to avoid jumping the page down to the carousel
+      container.focus({ preventScroll: true })
    })
 
    onUnmounted(() => {
