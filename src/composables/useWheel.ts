@@ -29,6 +29,8 @@ export function useWheel({
    const wheelLock = ref(false)
    let wheelTimeout: NodeJS.Timeout | null = null
    let lastWheelDirection = 0
+   let accumulatedDelta = 0
+   let accumulateTimeout: NodeJS.Timeout | null = null
 
    const wheelOptions = {
       threshold: props.wheelOptions?.threshold ?? 30,
@@ -44,10 +46,10 @@ export function useWheel({
       isWheeling.value = false
    }, wheelOptions.debounceTime || 10)
 
-   // Release lock after 250ms of no wheel events (handles trackpad inertia)
+   // Release lock quickly after wheel events stop
    const releaseWheelLock = debounce(() => {
       wheelLock.value = false
-   }, 50)
+   }, 35)
 
    const handleWheel = (e: WheelEvent) => {
       if (!props.mousewheel || state.isDragging) return
@@ -66,14 +68,14 @@ export function useWheel({
       }
 
       const primaryDelta = isHorizontal ? e.deltaX : e.deltaY
-      const absPrimaryDelta = Math.abs(primaryDelta)
       const currentDirection = Math.sign(primaryDelta)
 
       // Smart lock break: allow rapid consecutive swipes by detecting direction changes
       const isDirectionChange = currentDirection !== 0 && lastWheelDirection !== 0 && currentDirection !== lastWheelDirection
 
-      if (wheelLock.value && isDirectionChange) {
+      if (isDirectionChange) {
          wheelLock.value = false
+         accumulatedDelta = 0
       }
 
       lastWheelDirection = currentDirection
@@ -103,7 +105,7 @@ export function useWheel({
          return
       }
 
-      if (absPrimaryDelta >= 1) {
+      if (Math.abs(primaryDelta) >= 1) {
          if (wheelOptions.preventDefault && e.cancelable) {
             e.preventDefault()
          }
@@ -111,10 +113,23 @@ export function useWheel({
             e.stopPropagation()
          }
 
-         if (absPrimaryDelta < wheelOptions.threshold) {
+         // Accumulate delta to support both smooth trackpads and clicky mouse wheels
+         accumulatedDelta += primaryDelta
+
+         if (Math.abs(accumulatedDelta) < wheelOptions.threshold) {
             resetWheelState()
+            
+            // Clear accumulated delta quickly if user pauses scrolling
+            if (accumulateTimeout) clearTimeout(accumulateTimeout)
+            accumulateTimeout = setTimeout(() => {
+               accumulatedDelta = 0
+            }, 40)
             return
          }
+
+         const triggeredDelta = accumulatedDelta
+         accumulatedDelta = 0
+         if (accumulateTimeout) clearTimeout(accumulateTimeout)
 
          if (wheelTimeout) {
             clearTimeout(wheelTimeout)
@@ -127,14 +142,14 @@ export function useWheel({
          state.isWheeling = true
          isWheeling.value = true
 
-         const isPageScroll = absPrimaryDelta > wheelOptions.pageScrollThreshold
+         const isPageScroll = Math.abs(triggeredDelta) > wheelOptions.pageScrollThreshold
 
-         if (primaryDelta > wheelOptions.velocityThreshold) {
+         if (triggeredDelta > wheelOptions.velocityThreshold) {
             if (canGoNext.value) {
                if (isPageScroll) goNextPage()
                else goNext()
             }
-         } else if (primaryDelta < -wheelOptions.velocityThreshold) {
+         } else if (triggeredDelta < -wheelOptions.velocityThreshold) {
             if (canGoPrev.value) {
                if (isPageScroll) goPrevPage()
                else goPrev()
