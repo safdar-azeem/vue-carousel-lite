@@ -31,6 +31,7 @@ const handleButtonClick = (direction: 'prev' | 'next') => {
          @click.stop="handleButtonClick('prev')">
          <slot name="prev-icon">
             <svg
+               v-once
                width="24"
                height="24"
                viewBox="0 0 24 24"
@@ -57,6 +58,7 @@ const handleButtonClick = (direction: 'prev' | 'next') => {
          @click.stop="handleButtonClick('next')">
          <slot name="next-icon">
             <svg
+               v-once
                width="24"
                height="24"
                viewBox="0 0 24 24"
