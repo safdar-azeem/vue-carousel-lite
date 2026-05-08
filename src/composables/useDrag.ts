@@ -331,13 +331,16 @@ export function useDrag({
       handleEnd()
    }
 
-   // Prevent click events after drag
    const handleClick = (e: Event) => {
       if (hasSignificantMovement.value) {
          e.preventDefault()
          e.stopPropagation()
          e.stopImmediatePropagation()
       }
+   }
+
+   const handleContextMenu = (e: Event) => {
+      if (isDragging.value) e.preventDefault()
    }
 
    onMounted(() => {
@@ -368,13 +371,7 @@ export function useDrag({
       container.addEventListener('click', handleClick, { capture: true })
 
       // Prevent context menu during drag
-      container.addEventListener(
-         'contextmenu',
-         (e) => {
-            if (isDragging.value) e.preventDefault()
-         },
-         { passive: false }
-      )
+      container.addEventListener('contextmenu', handleContextMenu, { passive: false })
    })
 
    onUnmounted(() => {
@@ -395,6 +392,7 @@ export function useDrag({
          container.removeEventListener('touchmove', handleTouchMove)
          container.removeEventListener('touchend', handleTouchEnd)
          container.removeEventListener('click', handleClick, true)
+         container.removeEventListener('contextmenu', handleContextMenu)
       }
 
       // Cleanup styles
