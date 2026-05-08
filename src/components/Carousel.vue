@@ -17,7 +17,7 @@ const props = withDefaults(defineProps<CarouselProps>(), {
    mousewheel: true,
    draggable: true,
    pagination: 'dots',
-   paginationSize: 'sm',
+   paginationSize: 'md',
    autoPlayInterval: 3000,
    direction: 'horizontal',
    paginationVisibility: 'always',
