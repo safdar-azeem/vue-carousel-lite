@@ -14,14 +14,14 @@ const data: string[] = [
 ]
 
 // Reactive carousel properties
-const pagination = ref<PaginationType>('dots')
+const pagination = ref<PaginationType | 'false'>('dots')
 const paginationSize = ref<'xs' | 'sm' | 'md' | 'lg' | 'xl'>('md')
 const paginationPosition = ref<PaginationPosition | PaginationPosition[]>('bottom-center')
 const direction = ref<'horizontal' | 'vertical'>('horizontal')
 const autoPlay = ref<boolean>(false)
 const itemsToShow = ref<number>(1)
 const gap = ref<number>(0)
-const speed = ref<number>(500)
+const speed = ref<number>(700)
 const easing = ref<string>('ease')
 const mousewheel = ref<boolean>(true)
 const loop = ref<boolean>(false)
@@ -225,9 +225,9 @@ const toggleAllCode = () => {
                <Carousel
                   :key="carouselKey"
                   :data="data"
-                  :pagination="['dots', 'buttons']"
-                  :pagination-visibility="['always', 'hover']"
-                  :pagination-position="['bottom-center', 'center']"
+                  :pagination="pagination === 'false' ? false : pagination"
+                  pagination-visibility="always"
+                  :pagination-position="paginationPosition"
                   :pagination-size="paginationSize"
                   :direction="direction"
                   :auto-play="autoPlay"
