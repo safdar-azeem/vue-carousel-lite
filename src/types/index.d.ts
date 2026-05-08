@@ -36,7 +36,7 @@ export interface CarouselProps {
    autoPlayInterval?: number
    currentItem?: number
    paginationBackground?: boolean
-   paginationSize?: 'sm' | 'md' | 'lg'
+   paginationSize?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
    itemsToShow?: number | SlidesPerView
    direction?: 'horizontal' | 'vertical'
    pagination?: PaginationType | PaginationType[]
