@@ -8,7 +8,7 @@ import { computed, nextTick, onBeforeMount, onMounted, readonly, ref, watch } fr
 
 const props = withDefaults(defineProps<CarouselProps>(), {
    gap: 0,
-   speed: 200,
+   speed: 500,
    loop: false,
    itemsToShow: 1,
    currentItem: 0,
@@ -17,7 +17,7 @@ const props = withDefaults(defineProps<CarouselProps>(), {
    mousewheel: true,
    draggable: true,
    pagination: 'dots',
-   paginationSize: 'md',
+   paginationSize: 'sm',
    autoPlayInterval: 3000,
    direction: 'horizontal',
    paginationVisibility: 'always',
