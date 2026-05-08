@@ -264,7 +264,7 @@ export function useCarouselState({ props, itemsToShow, totalSlides }: UseCarouse
             state.isTransitioning = false
             // Apply window update after transition completes
             applyPendingWindowUpdate()
-         }, props.speed || 300)
+         }, props.speed || 700)
       } else {
          // For non-smooth transitions, apply window update immediately
          applyPendingWindowUpdate()
