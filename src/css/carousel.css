@@ -29,7 +29,7 @@
    outline: none;
    /* Performance optimizations */
    contain: layout style;
-   transform: translateZ(0);
+   will-change: transform;
 }
 
 /* NEW: Style for non-draggable carousel */
