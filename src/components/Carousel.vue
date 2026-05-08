@@ -8,7 +8,7 @@ import { computed, nextTick, onBeforeMount, onMounted, readonly, ref, watch } fr
 
 const props = withDefaults(defineProps<CarouselProps>(), {
    gap: 0,
-   speed: 500,
+   speed: 700,
    loop: false,
    itemsToShow: 1,
    currentItem: 0,
