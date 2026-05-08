@@ -66,7 +66,6 @@
    --carousel-pagination-button-gap: 1rem;
    --carousel-pagination-button-rotation: 90deg;
    --carousel-pagination-button-scale: 0.9;
-   --carousel-pagination-button-backdrop-blur: 0px;
 
    /* === FRACTION SPECIFIC === */
    --carousel-pagination-fraction-border-color: rgba(255, 255, 255, 0.1);
@@ -74,7 +73,6 @@
    --carousel-pagination-fraction-padding: 0.5rem 1rem;
    --carousel-pagination-fraction-border-radius: 1rem;
    --carousel-pagination-fraction-gap: 0.25rem;
-   --carousel-pagination-fraction-backdrop-blur: 4px;
    --carousel-pagination-fraction-separator-opacity: 0.7;
    --carousel-pagination-fraction-total-opacity: 0.9;
 
@@ -353,7 +351,6 @@
    transition: var(--carousel-pagination-transition);
    outline: none;
    color: var(--carousel-pagination-text-color);
-   backdrop-filter: blur(var(--carousel-pagination-button-backdrop-blur));
    position: relative;
 }
 
@@ -392,7 +389,6 @@
    border-radius: var(--carousel-pagination-fraction-border-radius);
    font-size: var(--carousel-pagination-font-size);
    font-weight: var(--carousel-pagination-font-weight);
-   backdrop-filter: blur(var(--carousel-pagination-fraction-backdrop-blur));
    text-shadow: var(--carousel-pagination-text-shadow);
    position: relative;
 }
