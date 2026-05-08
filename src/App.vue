@@ -15,7 +15,7 @@ const data: string[] = [
 
 // Reactive carousel properties
 const pagination = ref<PaginationType>('dots')
-const paginationSize = ref<'sm' | 'md' | 'lg'>('sm')
+const paginationSize = ref<'xs' | 'sm' | 'md' | 'lg' | 'xl'>('md')
 const paginationPosition = ref<PaginationPosition | PaginationPosition[]>('bottom-center')
 const direction = ref<'horizontal' | 'vertical'>('horizontal')
 const autoPlay = ref<boolean>(false)
@@ -28,7 +28,7 @@ const loop = ref<boolean>(false)
 const autoPlayInterval = ref<number>(3000)
 
 const paginationOptions: (PaginationType | 'false')[] = ['buttons', 'dots', 'lines', 'fraction', 'false']
-const paginationSizeOptions = ['sm', 'md', 'lg']
+const paginationSizeOptions = ['xs', 'sm', 'md', 'lg', 'xl']
 const paginationPositionOptions: PaginationPosition[] = [
    'bottom',
    'bottom-center',
