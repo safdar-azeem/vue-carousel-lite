@@ -15,13 +15,13 @@ const data: string[] = [
 
 // Reactive carousel properties
 const pagination = ref<PaginationType>('dots')
-const paginationSize = ref<'sm' | 'md' | 'lg'>('md')
+const paginationSize = ref<'sm' | 'md' | 'lg'>('sm')
 const paginationPosition = ref<PaginationPosition | PaginationPosition[]>('bottom-center')
 const direction = ref<'horizontal' | 'vertical'>('horizontal')
 const autoPlay = ref<boolean>(false)
 const itemsToShow = ref<number>(1)
 const gap = ref<number>(0)
-const speed = ref<number>(400)
+const speed = ref<number>(500)
 const easing = ref<string>('ease')
 const mousewheel = ref<boolean>(true)
 const loop = ref<boolean>(false)
@@ -313,13 +313,13 @@ const toggleAllCode = () => {
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
 
 :root {
-   --color-canvas: #0A0A0A;
+   --color-canvas: #0a0a0a;
    --color-surface-1: #161616;
    --color-surface-2: #222222;
    --color-surface-3: #333333;
    --color-hairline: rgba(255, 255, 255, 0.1);
    --color-hairline-soft: rgba(255, 255, 255, 0.05);
-   --color-ink: #FFFFFF;
+   --color-ink: #ffffff;
    --color-ink-muted: #999999;
 }
 
@@ -333,11 +333,17 @@ html {
 
 body {
    margin: 0;
-   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+   font-family:
+      'Inter',
+      -apple-system,
+      BlinkMacSystemFont,
+      'Segoe UI',
+      'Roboto',
+      sans-serif;
    background: var(--color-canvas);
    color: var(--color-ink);
    min-height: 100vh;
-   font-feature-settings: "cv01", "cv05", "cv09", "cv11", "ss03", "ss07", "dlig", "tnum";
+   font-feature-settings: 'cv01', 'cv05', 'cv09', 'cv11', 'ss03', 'ss07', 'dlig', 'tnum';
 }
 
 .container {
