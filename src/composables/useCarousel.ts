@@ -66,7 +66,7 @@ export function useCarousel({ props, slideWidth, slideHeight, itemsToShow }: Use
 
       const transition =
          state.isTransitioning && !state.isDragging
-            ? `transform ${props.speed || 300}ms ${props.easing || 'ease'}`
+            ? `transform ${props.speed || 700}ms ${props.easing || 'ease'}`
             : 'none'
 
       return {
