@@ -31,9 +31,8 @@ const positionClasses = computed(() => {
    return [
       'carousel-pagination',
       `carousel-pagination--${props.direction}`,
-      props.paginationSize === 'sm' ? 'carousel-pagination--sm' : '',
-      props.paginationSize === 'lg' ? 'carousel-pagination--lg' : '',
-   ]
+      props.paginationSize && props.paginationSize !== 'md' ? `carousel-pagination--${props.paginationSize}` : '',
+   ].filter(Boolean)
 })
 
 const paginationType = computed(() => {
