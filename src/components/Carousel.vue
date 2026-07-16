@@ -61,7 +61,6 @@ const {
    state,
    goNext,
    goPrev,
-   progress,
    canGoNext,
    canGoPrev,
    goToSlide,
@@ -252,7 +251,6 @@ onMounted(async () => {
                state.currentIndex,
                props.data.length,
                itemsToShow,
-               progress,
                visibleSlideIndices,
                canGoNext,
                canGoPrev,
@@ -264,7 +262,6 @@ onMounted(async () => {
             :current-index="state.currentIndex"
             :total-slides="props.data.length"
             :items-to-show="itemsToShow"
-            :progress="progress"
             :visible-slide-indices="visibleSlideIndices"
             :can-go-next="canGoNext"
             :can-go-prev="canGoPrev"
