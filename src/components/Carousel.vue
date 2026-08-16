@@ -214,16 +214,6 @@ onMounted(async () => {
                   <div
                      v-for="slideData in slidesData"
                      :key="getSlideKey(slideData)"
-                     v-memo="[
-                        slideData.item,
-                        slideData.originalIndex,
-                        state?.isDragging,
-                        state.currentIndex,
-                        itemsToShow,
-                        visibleSlideIndices.includes(slideData.originalIndex),
-                        isInitialized,
-                        props?.updateKey,
-                     ]"
                      :class="getSlideClasses(slideData.originalIndex)"
                      :aria-hidden="
                         isInitialized ? !visibleSlideIndices.includes(slideData.originalIndex) : false
