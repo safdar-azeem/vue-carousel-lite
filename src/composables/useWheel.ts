@@ -1,4 +1,4 @@
-import { ref, onMounted, onUnmounted, Ref, ComputedRef, readonly } from 'vue'
+import { ref, onMounted, onUnmounted, readonly, type Ref, type ComputedRef } from 'vue'
 import type { CarouselProps, CarouselState } from '../types'
 import { debounce } from '../utils/debounce'
 
