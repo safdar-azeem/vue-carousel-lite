@@ -1,4 +1,4 @@
-import { ComputedRef, onMounted, onUnmounted, Ref } from 'vue'
+import { onMounted, onUnmounted, type ComputedRef, type Ref } from 'vue'
 import type { CarouselProps } from '../types'
 
 interface UseKeyboardOptions {
@@ -23,11 +23,10 @@ export function useKeyboard({
    totalSlides,
 }: UseKeyboardOptions) {
    const handleKeyDown = (e: KeyboardEvent) => {
-      // Only handle when carousel container or its children are focused
       const container = containerRef.value
       if (!container) return
 
-      // Check if the focused element is the container or a child of the container
+      // Only handle when container or its children are focused
       const isCarouselFocused =
          document.activeElement === container || container.contains(document.activeElement)
 
@@ -99,40 +98,17 @@ export function useKeyboard({
 
          case ' ': // Spacebar
          case 'Enter':
-            // Allow spacebar and enter to work for pagination buttons, but prevent page scroll for space
-            if (e.key === ' ') {
-               // Only prevent default if the focused element is the container itself
-               if (document.activeElement === container) {
-                  e.preventDefault()
-               }
+            if (e.key === ' ' && document.activeElement === container) {
+               e.preventDefault()
             }
             break
       }
-   }
-
-   const handleContainerFocus = () => {
-      const container = containerRef.value
-      if (!container) return
-
-      // Add visual focus indicator
-      container.style.outline = '2px solid rgba(59, 130, 246, 0.5)'
-      container.style.outlineOffset = '2px'
-   }
-
-   const handleContainerBlur = () => {
-      const container = containerRef.value
-      if (!container) return
-
-      // Remove visual focus indicator
-      container.style.outline = 'none'
-      container.style.outlineOffset = '0'
    }
 
    const handleContainerClick = () => {
       const container = containerRef.value
       if (!container) return
 
-      // Focus the container when clicked to enable keyboard navigation
       if (document.activeElement !== container) {
          container.focus()
       }
@@ -142,47 +118,28 @@ export function useKeyboard({
       const container = containerRef.value
       if (!container) return
 
-      // Ensure container is focusable
       if (!container.hasAttribute('tabindex')) {
          container.setAttribute('tabindex', '0')
       }
 
-      // Add keyboard event listener to document for global capture
-      document.addEventListener('keydown', handleKeyDown, { capture: true })
-
-      // Add focus/blur handlers for visual feedback
-      container.addEventListener('focus', handleContainerFocus)
-      container.addEventListener('blur', handleContainerBlur)
-
-      // Add click handler to focus container
+      container.addEventListener('keydown', handleKeyDown)
       container.addEventListener('click', handleContainerClick)
 
-      // Set initial focus styles
-      container.style.outline = 'none'
-      container.style.cursor = 'pointer'
-
-      // Automatically focus the container so keyboard navigation works immediately
-      // Use preventScroll to avoid jumping the page down to the carousel
-      container.focus({ preventScroll: true })
+      // Respect autoFocus prop contract
+      if (props?.autoFocus) {
+         container.focus({ preventScroll: true })
+      }
    })
 
    onUnmounted(() => {
       const container = containerRef.value
-
-      // Remove document event listener
-      document.removeEventListener('keydown', handleKeyDown, {
-         capture: true,
-      })
-
       if (container) {
-         container.removeEventListener('focus', handleContainerFocus)
-         container.removeEventListener('blur', handleContainerBlur)
+         container.removeEventListener('keydown', handleKeyDown)
          container.removeEventListener('click', handleContainerClick)
       }
    })
 
    return {
-      // Expose method to manually focus the carousel for external control
       focus: () => {
          const container = containerRef.value
          if (container) {
