@@ -1,7 +1,7 @@
 import { debounce } from '../utils/debounce'
 import type { SlidesPerView } from '../types'
 import { useWindowWidth } from './useWindowWidth'
-import { ref, onMounted, onUnmounted, nextTick, Ref, ComputedRef, computed, readonly, unref } from 'vue'
+import { ref, onMounted, onUnmounted, nextTick, computed, readonly, unref, type Ref, type ComputedRef } from 'vue'
 
 interface DimensionsOptions {
    direction?: 'horizontal' | 'vertical'
@@ -43,6 +43,10 @@ export function useDimensions(options: DimensionsOptions) {
       if (options?.direction === 'horizontal') {
          setTimeout(() => {
             const actualWidth = containerElement.clientWidth
+            const actualHeight = containerElement.clientHeight
+            if (actualHeight > 0) {
+               slideHeight.value = actualHeight + 'px'
+            }
             if (actualWidth > 0) {
                // UPDATED: Calculate slide width accounting for gaps
                const gap = itemsToShow.value > 1 ? options?.gap || 0 : 0
@@ -104,7 +108,7 @@ export function useDimensions(options: DimensionsOptions) {
             ? `${slideWidthValue}px`
             : `calc(${containerWidth?.value} / ${slides} - ${gap * 0.75}px)`,
          '--container-width': containerWidth?.value,
-         '--container-height': slideHeight?.value,
+         '--container-height': slideHeight?.value === 'auto' ? '100%' : slideHeight?.value,
          '--carousel-gap': `${gap}px`,
       }
    })
