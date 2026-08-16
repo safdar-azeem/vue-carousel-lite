@@ -1,4 +1,4 @@
-import { ref, computed, reactive, watch, nextTick, ComputedRef, readonly } from 'vue'
+import { ref, computed, reactive, watch, nextTick, readonly, type ComputedRef } from 'vue'
 import type { CarouselProps, CarouselState } from '../types'
 
 interface UseCarouselStateOptions {
@@ -239,16 +239,23 @@ export function useCarouselState({ props, itemsToShow, totalSlides }: UseCarouse
 
    let transitionTimeout: ReturnType<typeof setTimeout> | null = null
 
-   // FIXED: Slide navigation with deferred window updates
+   // FIXED: Slide navigation with deferred window updates and rapid navigation safety
    const goToSlide = (index: number, smooth = true) => {
       const targetIndex = Math.max(0, Math.min(index, maxIndex.value))
       if (targetIndex === state.currentIndex) return
 
-      // Check if we need a window update, but don't apply it yet
-      const needsWindowUpdate = shouldUpdateRenderWindow(targetIndex)
+      // Check if target is completely outside the currently rendered window
+      const isOutsideRenderWindow =
+         targetIndex < renderWindowStart.value || targetIndex > renderWindowEnd.value
 
-      if (needsWindowUpdate && !state.isTransitioning) {
-         updateRenderWindow(targetIndex, false) // Prepare but don't apply
+      const needsWindowUpdate = isOutsideRenderWindow || shouldUpdateRenderWindow(targetIndex)
+
+      if (needsWindowUpdate) {
+         if (isOutsideRenderWindow || !smooth) {
+            updateRenderWindow(targetIndex, true)
+         } else {
+            updateRenderWindow(targetIndex, false) // Prepare latest window update
+         }
       }
 
       // Update current index immediately
