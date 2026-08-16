@@ -4,7 +4,7 @@ import { useWheel } from './useWheel'
 import { useAutoplay } from './useAutoplay'
 import { useKeyboard } from './useKeyboard'
 import type { CarouselProps } from '../types'
-import { computed, ComputedRef, ref, Ref } from 'vue'
+import { computed, ref, type ComputedRef, type Ref } from 'vue'
 import { useCarouselState } from './useCarouselState'
 
 interface UseCarouselOptions {
