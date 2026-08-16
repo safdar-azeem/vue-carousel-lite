@@ -1,4 +1,4 @@
-import { ref, watch, onMounted, onUnmounted, ComputedRef, readonly } from 'vue'
+import { ref, watch, onMounted, onUnmounted, readonly, type ComputedRef } from 'vue'
 import type { CarouselProps, CarouselState } from '../types'
 
 interface UseAutoplayOptions {
