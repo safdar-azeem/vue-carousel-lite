@@ -1,5 +1,5 @@
 import type { CarouselProps, CarouselState } from '../types'
-import { ref, onMounted, onUnmounted, nextTick, Ref, ComputedRef, readonly, computed } from 'vue'
+import { ref, onMounted, onUnmounted, nextTick, readonly, computed, type Ref, type ComputedRef } from 'vue'
 
 interface UseDragOptions {
    containerRef: Ref<HTMLElement | null>
